@@ -1,0 +1,1 @@
+/home/ezra/.config/i3/mute.sh
