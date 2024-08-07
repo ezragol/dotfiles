@@ -1,1 +1,1 @@
-/home/ezra/.config/.zshrc
+/home/ezra/.zshrc
