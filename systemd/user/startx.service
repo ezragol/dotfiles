@@ -1,1 +1,8 @@
-/home/ezra/.config/systemd/user/startx.service
+[Unit]
+Description=X Server Daemon
+
+[Service]
+ExecStart=startx
+
+[Install]
+WantedBy=default.target

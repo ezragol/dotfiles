@@ -1,1 +1,4 @@
-/home/ezra/.config/i3/mute.sh
+#!/bin/zsh
+
+DEFAULT=$(pactl get-default-sink)
+pactl set-sink-mute $DEFAULT toggle

@@ -1,1 +1,4 @@
-/home/ezra/.config/i3/voldown.sh
+#!/bin/zsh
+
+DEFAULT=$(pactl get-default-sink)
+pactl set-sink-volume $DEFAULT -1%
