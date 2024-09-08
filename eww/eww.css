@@ -1,0 +1,192 @@
+* {
+    background: unset;
+    color: unset;
+}
+
+button {
+    all: unset;
+}
+
+.time {
+    font-size: 90px;
+    font-family: 'Red Hat Display';
+    color: white;
+    font-weight: 800;
+    background-color: transparent;
+    border: none;
+}
+
+.date {
+    font-size: 18px;
+    padding: 0 3px;
+}
+
+.sidebar {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    margin: 6px 7px 6px 2px;
+}
+
+.container {
+    background-color: rgba(19, 22, 29, 0.621);
+    border-radius: 5px;
+    box-shadow: 0 0 3px -1px black;
+}
+
+.side {
+    padding: 60px 40px;
+}
+
+.info {
+    margin: 50px -150px 0 0;
+    font-family: 'Inconsolata';
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.gauge-label {
+    color: white;
+}
+
+.battery label, .ram label, .disk label {
+    color: white;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.labels {
+    color: rgb(255, 255, 255);
+    font-family: 'Red Hat Display';
+    font-weight: 800;
+    margin: 0 -200px 90px -50px;
+    font-size: 16px;
+}
+
+.launcher button {
+    background-color: rgba(45, 46, 50, 0.196);
+    border-radius: 5px;
+    margin: 5px 6px;
+}
+
+button {
+    padding: 5px;
+    border: none;
+    background-color: transparent;
+}
+
+button image {
+    background-color: transparent;
+}
+
+.launcher {
+    margin-bottom: 130px;
+}
+
+.cover {
+    background-size: contain;
+}
+
+.title, .album, .artist {
+    font-family: 'Red Hat Display';
+}
+
+.title {
+    font-weight: 800;
+    font-size: 22px;
+}
+
+.artist, .album {
+    font-size: 18px;
+}
+
+.song-info {
+    margin-bottom: -30px;
+}
+
+progressbar > trough {
+    min-width: 200px;
+    min-height: 5px;
+    background-color: rgba(106, 106, 106, 0.196);
+    padding: 0;
+    border: none;
+}
+
+progressbar > trough > progress {
+    background-color: white;
+    border: none;
+    min-height: 5px;
+    margin: 0;
+}
+
+.actions {
+    margin-top: 10px;
+    color: white;
+}
+
+.dock {
+    background-color: rgba(165, 178, 201, 0.659);
+    padding: 0 12px 0 0;
+    color: #2e2d2d;
+    font-family: 'Red Hat Display', sans-serif;
+    font-weight: 800;
+}
+
+.pbutton {
+    padding: 0 9px;
+    margin-left: 3px;
+}
+
+.percent {
+    margin-top: 3px;
+}
+
+.vol {
+    margin-left: -7px;
+}
+
+.volbtn {
+    padding: 1px 6px 0 6px;
+}
+
+scale > contents > trough {
+    border: none;
+}
+
+scale > contents > trough > slider {
+    all: unset;
+    padding: 5px;
+    border-radius: 50%;
+    border: none;
+    background-color: #2e2d2d;
+}
+
+scale > contents > trough > highlight  {
+    margin: 2px 0;
+    background-color: #2e2d2d;
+    border: none;
+}
+
+.hovered {
+    background-color: rgba(74, 82, 96, 0.388);
+}
+
+.pwrbutton {
+    padding: 3px 12px 0 12px;
+}
+
+.song {
+    margin-right: 10px;
+}
+
+.launchbtn {
+    padding: 0 10px;
+}
+
+.battperc {
+    margin: 0 -3px 0 8px;
+}
+
+.slider {
+    margin-left: -6px;
+}
