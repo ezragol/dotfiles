@@ -5,8 +5,8 @@
     :orientation "v"
     (box
       :class "bigtime"
-      :halign "start"
-      {formattime(EWW_TIME, "%I:%M")}
+      :halign {align}
+      {formattime(EWW_TIME, "%R")}
     )
     (box
       :class "date"
@@ -39,40 +39,38 @@
 (defvar powerreveal false)
 (defvar volumereveal false)
 (defvar musicreveal false)
+(defvar wifireveal false)
+(defvar wifi "")
 
 (deflisten volume
   :initial 0
 "tail -f ~/.config/hypr/volume.txt")
 
 (deflisten muted
-  :initial "no"
+  :initial "yes"
 "tail -f ~/.config/hypr/mute.txt")
 
 (defpoll wtitle
-  :interval "1s"
+  :interval "2s"
   :initial ""
-"hyprctl activewindow | grep title | awk -F'title:' '{print (NF>1)? $NF : \"\"}' | rev | cut -d '-' -f1 | rev")
+  "hyprctl activewindow | grep title | awk -F'title:' '{print (NF>1)? $NF : \"\"}' | rev | cut -d '-' -f1 | rev")
 
-(defwidget hoverbtn [varname]
+(defvar currenthover "")
+(defvar losthover "")
+
+(defvar statsvisible false)
+
+(defwidget hoverbtn [name class onclick]
   (eventbox
-    :onhover "eww update ${varname}=true"
-    :onhoverlost "eww update ${varname}=false"
-    (children)
+    :onhover "eww update currenthover=${name} && eww update losthover=\"\""
+    :onhoverlost "eww update losthover=${name}"
+    (button
+      :class {currenthover == name && losthover != name ? "hovered " + class : class}
+      :onclick {onclick}
+      (children)
+    )
   )
 )
-
-(defvar poweroff false)
-(defvar reboot false)
-(defvar powermenu false)
-(defvar volumemenu false)
-(defvar audioback false)
-(defvar audioplay false)
-(defvar audionext false)
-(defvar music false)
-(defvar chrome false)
-(defvar spotify false)
-(defvar code false)
-(defvar inkscape false)
 
 (defwidget zerobasednum [num class]
   (label :class {class} :text {num < 10 ? ("0${num}") : num})
@@ -82,6 +80,19 @@
   :interval "1s"
   :initial "0"
   "playerctl position"
+)
+
+(defwidget icon [name ?class ?scale]
+  (image
+    :path "/home/ezra/.config/hypr/images/${name}"
+    :image-width {scale != "" ? scale : 18}
+    :image-height {scale != "" ? scale : 18}
+    :class {class}
+  )
+)
+
+(defwidget volumeicon [scale]
+  (icon :name "volume_${muted == "yes" ? "off" : volume < 100 ? volume == 0 ? "mute" : "low" : "high"}.png" :scale {scale})
 )
 
 (defwindow dock
@@ -95,228 +106,264 @@
   :stacking "fg"
   :exclusive true
   :focusable false
-  (centerbox
-    (box
-      :halign "start"
-      :space-evenly false
-      (hoverbtn :varname "powermenu"
-        (button
+  (eventbox
+    :onhoverlost "eww update currenthover=\"\""
+    (centerbox
+      (box
+        :halign "start"
+        :space-evenly false
+        (hoverbtn
+          :name "powermenu"
+          :class "pbutton"
           :onclick "eww update powerreveal=${!powerreveal}"
-          :width 30
-          :class {powermenu ? "hovered pbutton" : "pbutton"}
-          (image
-            :path "/home/ezra/.config/hypr/images/arch.svg"
-            :image-width 18
-            :image-height 18
-          )
+          (icon :name "arch.svg")
         )
-      )
-      (revealer
-        :reveal {powerreveal}
-        :transition "slideright"
-        :duration "250ms"
-        (box
-          :halign "center"
-          :space-evenly false
-          (hoverbtn :varname "poweroff"
-            (button
-              :class {poweroff ? "hovered pwrbutton" : "pwrbutton"}
+        (revealer
+          :reveal {powerreveal}
+          :transition "slideright"
+          :duration "250ms"
+          (box
+            :halign "center"
+            :space-evenly false
+            (hoverbtn
+              :name "poweroff"
+              :class "pwrbutton"
               :onclick "shutdown now"
               "power off"
             )
-          )
-          (hoverbtn :varname "reboot"
-            (button
-              :class {reboot ? "hovered pwrbutton" : "pwrbutton"}
+            (hoverbtn
+              :name "reboot"
+              :class "pwrbutton"
               :onclick "reboot"
               "reboot"
             )
           )
         )
-      )
-      (hoverbtn :varname "chrome"
-        (button
+        (hoverbtn
+          :name "chrome"
           :onclick "/home/ezra/.config/eww/select.sh Google-chrome google-chrome-stable &"
-          :class {chrome ? "hovered launchbtn" : "launchbtn"}
+          :class "launchbtn"
           (box
             :space-evenly false
-            (image
-              :path "/home/ezra/.config/hypr/images/chrome.png"
-              :image-width 18
-              :image-height 18
-              :class "song"
-            )
+            (icon :name "chrome.png" :class "song" :scale 20)
             (label :class "percent" :text "chrome")
           )
         )
-      )
-      (hoverbtn :varname "spotify"
-        (button
+        (hoverbtn
+          :name "spotify"
           :onclick "/home/ezra/.config/eww/select.sh Spotify spotify &"
-          :class {spotify ? "hovered launchbtn" : "launchbtn"}
+          :class "launchbtn"
           (box
             :space-evenly false
-            (image
-              :path "/home/ezra/.config/hypr/images/spotify.svg"
-              :image-width 18
-              :image-height 18
-              :class "song"
-            )
+            (icon :name "spotify.svg" :class "song")
             (label :class "percent" :text "spotify")
           )
         )
-      )
-      (hoverbtn :varname "code"
-        (button
+        (hoverbtn
+          :name "code"
           :onclick "/home/ezra/.config/eww/select.sh Code code"
-          :class {code ? "hovered launchbtn" : "launchbtn"}
+          :class "launchbtn"
           (box
             :space-evenly false
-            (image
-              :path "/home/ezra/.config/hypr/images/code.svg"
-              :image-width 18
-              :image-height 18
-              :class "song"
-            )
+            (icon :name "code.svg" :class "song")
             (label :class "percent" :text "vscode")
           )
         )
-      )
-      (hoverbtn :varname "inkscape"
-        (button
+        (hoverbtn
+          :name "inkscape"
           :onclick "inkscape &"
-          :class {inkscape ? "hovered launchbtn" : "launchbtn"}
+          :class "launchbtn"
           (box
             :space-evenly false
-            (image
-              :path "/home/ezra/.config/hypr/images/inkscape.png"
-              :image-width 18
-              :image-height 18
-              :class "song"
-            )
+            (icon :name "inkscape.png" :class "song" :scale 20)
             (label :class "percent" :text "inkscape")
           )
         )
       )
-    )
-    (box {wtitle})
-    (box
-      :halign "end"
-      :space-evenly false
-      (revealer
-        :reveal {musicreveal && artist != ""}
-        :transition "slideright"
-        :duration "250ms"
-        (box
-          :space-evenly false
-          (label :class "song" :text {title} :wrap true :limit-width 20)
-          (hoverbtn :varname "audioback"
-            (button
-              :class {audioback ? "hovered" : ""}
+      (label :class "percent" :text {wtitle})
+      (box
+        :halign "end"
+        :class "right-side"
+        :space-evenly false
+        (revealer
+          :reveal {musicreveal && artist != ""}
+          :transition "slideright"
+          :duration "250ms"
+          (box
+            :space-evenly false
+            (label :class "song" :text {title} :wrap true :limit-width 20)
+            (hoverbtn
+              :name "audioback"
+              :class ""
               :onclick "playerctl back"
-              (image
-                :path "/home/ezra/.config/hypr/images/audio_back.png"
-                :image-height 23
-                :image-width 23
-              )
+              (icon :name "audio_back.png" :scale 23)
             )
-          )
-          (hoverbtn :varname "audioplay"
-            (button
-              :class {audioplay ? "hovered" : ""}
+            (hoverbtn
+              :name "audioplay"
+              :class ""
               :onclick "playerctl play-pause"
-              (image
-                :path "/home/ezra/.config/hypr/images/audio_${playing == "Paused" ? "play" : "pause"}.png"
-                :image-height 20
-                :image-width 20
-              )
+              (icon :name "audio_${playing == "Paused" ? "play" : "pause"}.png" :scale 20)
             )
-          )
-          (hoverbtn :varname "audionext"
-            (button
-              :class {audionext ? "hovered song" : "song"}
+            (hoverbtn
+              :name "audionext"
+              :class "song"
               :onclick "playerctl next"
-              (image
-                :path "/home/ezra/.config/hypr/images/audio_next.png"
-                :image-height 23
-                :image-width 23
+              (icon :name "audio_next.png" :scale 23)
+            )
+            "("
+              (label :text {(round(pos / 60, 0) < (pos / 60) ? round(pos / 60, 0) : (round(pos / 60, 0) - 1))})
+              ":"
+              (zerobasednum
+                :num {(round(pos % 60, 0) < (pos % 60) ? round(pos % 60, 0) : (round(pos % 60, 0) - 1))}
+                :class ""
               )
-            )
+              "/ "
+              (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
+              ":"
+              (zerobasednum
+                :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
+                :class ""
+              )
+              (label :class "song" :text ")")
           )
-          "("
-            (label :text {(round(pos / 60, 0) < (pos / 60) ? round(pos / 60, 0) : (round(pos / 60, 0) - 1))})
-            ":"
-            (zerobasednum
-              :num {(round(pos % 60, 0) < (pos % 60) ? round(pos % 60, 0) : (round(pos % 60, 0) - 1))}
-              :class ""
-            )
-            "/ "
-            (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
-            ":"
-            (zerobasednum
-              :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
-              :class ""
-            )
-            (label :class "song" :text ")")
         )
-      )
-      (hoverbtn :varname "music"
-        (button
+        (hoverbtn
+          :name "music"
           :onclick "eww update musicreveal=${!musicreveal}"
-          :width 30
-          :class {music ? "hovered pbutton" : "pbutton"}
-          (image
-            :path "/home/ezra/.config/hypr/images/music.png"
-            :image-width 18
-            :image-height 18
+          :class "pbutton"
+          (icon :name "music.png")
+        )
+        (revealer
+          :reveal {wifireveal}
+          :transition "slideright"
+          :duration "250ms"
+          (box
+            :space-evenly false
+            :class "volbtn"
+            {wifi}
           )
         )
-      )
-      (hoverbtn :varname "volumemenu"
-        (button
-          :class {volumemenu ? "hovered volbtn" : "volbtn"}
+        (hoverbtn
+          :name "wifi"
+          :class "wifibtn"
+          :onclick "eww update wifireveal=${!wifireveal} && /home/ezra/.config/hypr/getwifi.sh"
+          (icon :name "wifi.png" :scale 20)
+        )
+        (hoverbtn
+          :name "volumemenu"
+          :class "volbtn"
           :onclick "eww update volumereveal=${!volumereveal}"
-          :width 30
-          (image
-            :path "/home/ezra/.config/hypr/images/${muted == "yes" ? "volume_off" : volume < 100 ? volume == 0 ? "volume_mute" : "volume_low" : "volume_high"}.png"
-            :image-width 23
-            :image-height 23
+          (volumeicon :scale 21)
+        )
+        (revealer
+          :reveal {volumereveal}
+          :transition "slideright"
+          :duration "250ms"
+          (box
+            :space-evenly false
+            (scale
+              :max 101
+              :width 100
+              :height 3
+              :value {volume / 2}
+              :onchange "/home/ezra/.config/hypr/setvol.sh {}"
+            )
           )
+        )
+        (box
+          :class "battperc vol song"
+          (box
+            :class "percent"
+            {EWW_BATTERY.BAT0.capacity + "%"}
+          )
+          (icon :name "battery_${EWW_BATTERY.BAT0.status == "Charging" ? "charging" : EWW_BATTERY.BAT0.capacity < 10 ? "critical" : EWW_BATTERY.BAT0.capacity < 25 ? "low" : EWW_BATTERY.BAT0.capacity < 40 ? "down" : EWW_BATTERY.BAT0.capacity < 55 ? "mid" : EWW_BATTERY.BAT0.capacity < 70 ? "up" : EWW_BATTERY.BAT0.capacity < 85 ? "high" : "full"}.png" :class "song")
+        )
+        (label
+          :class "percent right"
+          :text {formattime(EWW_TIME, "%l:%M %p")}
+        )
+        (hoverbtn
+          :name "stats"
+          :class "volbtn"
+          :onclick "eww update statsvisible=${!statsvisible}"
+          (icon :name "stats.png" :scale 20)
         )
       )
-      (revealer
-        :reveal {volumereveal}
-        :transition "slideright"
-        :duration "250ms"
-        (box
-          :space-evenly false
-          :class "slider"
-          (scale
-            :max 101
-            :width 100
-            :height 3
-            :value {volume / 2}
-            :onchange "/home/ezra/.config/hypr/setvol.sh {}"
-          )
+    )
+  )
+)
+
+(defpoll brightness
+  :interval "1s"
+  :run-while {statsvisible}
+  "cat /sys/class/backlight/intel_backlight/brightness"
+)
+
+(defwindow stats
+  :monitor 0
+  :geometry (geometry
+    :x 0
+    :y 0
+    :width 520
+    :anchor "top right"
+  )
+  :stacking "fg"
+  :exclusive false
+  :focusable false
+  (box
+    :width 520
+    :height 370
+    :visible {statsvisible}
+    :class "statwindow"
+    (box
+      :orientation "v"
+      :valign "start"
+      :class "leftstat"
+      (box
+        :class "progress"
+        :valign "center"
+        :space-evenly false
+        (progress
+          :value {EWW_CPU.avg}
+          :class "bar firstbar"
         )
+        (icon :name "cpu.png" :scale 25)
       )
       (box
-        :class "battperc vol song"
-        (box
-          :class "percent"
-          {EWW_BATTERY.BAT0.capacity + "%"}
+        :class "progress"
+        :valign "center"
+        :space-evenly false
+        (progress
+          :value {EWW_RAM.used_mem_perc}
+          :class "bar"
         )
-        (image
-          :class "song"
-          :path "/home/ezra/.config/hypr/images/${EWW_BATTERY.BAT0.capacity < 10 ? "battery_critical" : EWW_BATTERY.BAT0.capacity < 25 ? "battery_low" : EWW_BATTERY.BAT0.capacity < 40 ? "battery_down" : EWW_BATTERY.BAT0.capacity < 55 ? "battery_mid" : EWW_BATTERY.BAT0.capacity < 70 ? "battery_up" : EWW_BATTERY.BAT0.capacity < 85 ? "battery_high" : "battery_full"}.png"
-          :image-width 18
-          :image-height 18
+        (icon :name "memory.png" :scale 27)
+      )
+      (box
+        :class "progress"
+        :valign "center"
+        :space-evenly false
+        (progress
+          :value {EWW_DISK["/"].used_perc}
+          :class "bar"
         )
+        (icon :name "storage.png" :scale 26)
       )
-      (label
-        :class "percent"
-        :text {formattime(EWW_TIME, "%k:%M %p")}
+      (box
+        :class "progress"
+        :valign "center"
+        :space-evenly false
+        (progress
+          :value {brightness / 960}
+          :class "bar"
+        )
+        (icon :name "brightness_${brightness / 960 < 25 ? "low" : brightness / 960 < 50 ? "down" : brightness / 960 < 75 ? "mid" : "high"}.png" :scale 26)
       )
+    )
+    (box
+      :class "clock"
+      :valign "start"
+      (clock :align "end")
     )
   )
 )
@@ -499,42 +546,3 @@
     )
   )
 )
-
-; (defwidget launcher []
-;   (box
-;     :orientation "v"
-;     :class "launcher"
-;     :valign "end"
-;     (box
-;       :halign "start"
-;       (app
-;         :click "google-chrome-stable &"
-;         :image "google-chrome"
-;       )
-;       (app
-;         :click "spotify --no-zygote &"
-;         :image "spotify"
-;       )
-;       (app
-;         :click "google-chrome-stable https://gmail.com &"
-;         :image "gmail"
-;       )
-;       (app
-;         :click "alacritty &"
-;         :image "org.gnome.Console"
-;       )
-;       (app
-;         :click "code"
-;         :image "com.visualstudio.code"
-;       )
-;       (app
-;         :click "inkscape &"
-;         :image "inkscape"
-;       )
-;       (app
-;         :click "google-chrome-stable https://github.com &"
-;         :image "github"
-;       )
-;     )
-;   )
-; )

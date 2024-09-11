@@ -126,14 +126,13 @@ progressbar > trough > progress {
 
 .dock {
     background-color: rgba(165, 178, 201, 0.659);
-    padding: 0 12px 0 0;
     color: #2e2d2d;
     font-family: 'Red Hat Display', sans-serif;
     font-weight: 800;
 }
 
 .pbutton {
-    padding: 0 9px;
+    padding: 1px 8px 0 8px;
     margin-left: 3px;
 }
 
@@ -149,25 +148,31 @@ progressbar > trough > progress {
     padding: 1px 6px 0 6px;
 }
 
+.wifibtn {
+    padding: 0 7px;
+}
+
 scale > contents > trough {
     border: none;
+    background-color: rgba(74, 82, 96, 0.396);
 }
 
 scale > contents > trough > slider {
     all: unset;
-    padding: 5px;
+    padding: 6px;
     border-radius: 50%;
     border: none;
     background-color: #2e2d2d;
 }
 
 scale > contents > trough > highlight  {
-    margin: 2px 0;
+    margin: 3px 0;
     background-color: #2e2d2d;
     border: none;
 }
 
 .hovered {
+    transition: background-color, 0.15s;
     background-color: rgba(74, 82, 96, 0.388);
 }
 
@@ -187,6 +192,48 @@ scale > contents > trough > highlight  {
     margin: 0 -3px 0 8px;
 }
 
-.slider {
-    margin-left: -6px;
+.right-side {
+    padding-right: 3px;
+}
+
+.right {
+    padding: 0 8px 0 2px;
+}
+
+.statwindow {
+    background-color: rgba(35, 38, 46, 0.932);
+    font-family: 'Red Hat Display';
+}
+
+.statwindow .bigtime {
+    font-size: 54px;
+}
+
+.statwindow .date {
+    font-weight: 800;
+}
+
+.clock {
+    margin: 30px 25px 30px 0;
+}
+
+.progress {
+    margin: 25px -25px -10px 25px;
+}
+
+.bar {
+    padding-bottom: 13px;
+    margin-right: 17px;
+}
+
+.leftstat {
+    margin: 15px 20px 0 10px;
+}
+
+progressbar > trough > progress {
+    min-height: 7px;
+}
+
+.firstbar {
+    margin-right: 18px;
 }
