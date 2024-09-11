@@ -169,16 +169,6 @@
             (label :class "percent" :text "vscode")
           )
         )
-        (hoverbtn
-          :name "inkscape"
-          :onclick "inkscape &"
-          :class "launchbtn"
-          (box
-            :space-evenly false
-            (icon :name "inkscape.png" :class "song" :scale 20)
-            (label :class "percent" :text "inkscape")
-          )
-        )
       )
       (label :class "percent" :text {wtitle})
       (box
