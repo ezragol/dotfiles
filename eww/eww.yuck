@@ -73,9 +73,10 @@
   "playerctl --follow metadata --format {{mpris:length}}"
 )
 
-(deflisten position
+(defpoll position
   :initial 0
-  "playerctl --follow position"
+  :interval "1s"
+  "/home/ezra/.config/hypr/position.sh"
 )
 
 (deflisten playing
@@ -329,14 +330,14 @@
   :geometry (geometry
     :x 0
     :y 0
-    :width 790
+    :width 845
     :anchor "top right"
   )
   :stacking "fg"
   :exclusive false
   :focusable false
   (box
-    :width 790
+    :width 845
     :height 325
     :visible {statsvisible}
     :class "statwindow"
@@ -345,6 +346,7 @@
       :orientation "v"
       :space-evenly false
       :valign "start"
+      :visible {artist != ""}
       (box
         :halign "end"
         :valign "start"
@@ -367,28 +369,16 @@
             :class "actions"
             :width 275
             (button
-              :onclick "playerctl back"
-              (image
-                :path "/usr/share/icons/ePapirus-Dark/22x22/actions/media-seek-backward.svg"
-                :image-height 50
-                :image-width 50
-              )
+              :onclick "playerctl previous"
+              (icon :name "audio_back_white.png" :scale 33)
             )
             (button
               :onclick "playerctl play-pause"
-              (image
-                :path "/usr/share/icons/ePapirus-Dark/22x22/actions/media-playback-pause.svg"
-                :image-height 45
-                :image-width 45
-              )
+              (icon :name "audio_${playing == "Playing" ? "pause" : "play"}_white.png" :scale 33)
             )
             (button
               :onclick "playerctl next"
-              (image
-                :path "/usr/share/icons/ePapirus-Dark/22x22/actions/media-seek-forward.svg"
-                :image-height 50
-                :image-width 50
-              )
+              (icon :name "audio_next_white.png" :scale 33)
             )
           )
         )
@@ -396,8 +386,8 @@
           :class "cover"
           (image
             :path {cover}
-            :image-height 150
-            :image-width 150
+            :image-height 165
+            :image-width 165
           )
         )
       )
