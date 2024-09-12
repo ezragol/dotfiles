@@ -7,5 +7,6 @@
 !/hypr/*
 !README.md
 !.gitignore
+/hypr/calendar/update_calendar
 /hypr/mute.txt
 /hypr/volume.txt

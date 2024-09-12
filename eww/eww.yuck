@@ -1,21 +1,3 @@
-(defwidget clock [align]
-  (box
-    :space-evenly false
-    :halign {align}
-    :orientation "v"
-    (box
-      :class "bigtime"
-      :halign {align}
-      {formattime(EWW_TIME, "%R")}
-    )
-    (box
-      :class "date"
-      :halign {align}
-      {formattime(EWW_TIME, "%A, %B %d")}
-    )
-  )
-)
-
 (defwindow dashboard
   :monitor 0
   :geometry (geometry
@@ -60,6 +42,71 @@
 
 (defvar statsvisible false)
 
+(defpoll pos
+  :interval "1s"
+  :initial "0"
+  "playerctl position"
+)
+
+(deflisten cover
+  :initial ""
+  "/home/ezra/.config/eww/cover.sh"
+)
+
+(deflisten title
+  :initial ""
+  "playerctl --follow metadata --format {{title}}"
+)
+
+(deflisten artist
+  :initial ""
+  "playerctl --follow metadata --format {{artist}}"
+)
+
+(deflisten album
+  :initial ""
+  "playerctl --follow metadata --format {{album}}"
+)
+
+(deflisten length
+  :initial "0"
+  "playerctl --follow metadata --format {{mpris:length}}"
+)
+
+(deflisten position
+  :initial 0
+  "playerctl --follow position"
+)
+
+(deflisten playing
+  :initial "Paused"
+  "playerctl --follow status"
+)
+
+(defpoll brightness
+  :interval "1s"
+  :run-while {statsvisible}
+  "cat /sys/class/backlight/intel_backlight/brightness"
+)
+
+(defwidget clock [align]
+  (box
+    :space-evenly false
+    :halign {align}
+    :orientation "v"
+    (box
+      :class "bigtime"
+      :halign {align}
+      {formattime(EWW_TIME, "%R")}
+    )
+    (box
+      :class "date"
+      :halign {align}
+      {formattime(EWW_TIME, "%A, %B %d")}
+    )
+  )
+)
+
 (defwidget hoverbtn [name class onclick]
   (eventbox
     :onhover "eww update currenthover=${name} && eww update losthover=\"\""
@@ -74,12 +121,6 @@
 
 (defwidget zerobasednum [num class]
   (label :class {class} :text {num < 10 ? ("0${num}") : num})
-)
-
-(defpoll pos
-  :interval "1s"
-  :initial "0"
-  "playerctl position"
 )
 
 (defwidget icon [name ?class ?scale]
@@ -141,7 +182,7 @@
         )
         (hoverbtn
           :name "chrome"
-          :onclick "/home/ezra/.config/eww/select.sh Google-chrome google-chrome-stable &"
+          :onclick "/home/ezra/.config/eww/select.sh Google-chrome google-chrome-stable flags --ozone-platform-hint=auto --ozone-platform=wayland &"
           :class "launchbtn"
           (box
             :space-evenly false
@@ -239,15 +280,9 @@
           :onclick "eww update wifireveal=${!wifireveal} && /home/ezra/.config/hypr/getwifi.sh"
           (icon :name "wifi.png" :scale 20)
         )
-        (hoverbtn
-          :name "volumemenu"
-          :class "volbtn"
-          :onclick "eww update volumereveal=${!volumereveal}"
-          (volumeicon :scale 21)
-        )
         (revealer
           :reveal {volumereveal}
-          :transition "slideright"
+          :transition "slideleft"
           :duration "250ms"
           (box
             :space-evenly false
@@ -259,6 +294,12 @@
               :onchange "/home/ezra/.config/hypr/setvol.sh {}"
             )
           )
+        )
+        (hoverbtn
+          :name "volumemenu"
+          :class "volbtn"
+          :onclick "eww update volumereveal=${!volumereveal}"
+          (volumeicon :scale 21)
         )
         (box
           :class "battperc vol song"
@@ -283,77 +324,131 @@
   )
 )
 
-(defpoll brightness
-  :interval "1s"
-  :run-while {statsvisible}
-  "cat /sys/class/backlight/intel_backlight/brightness"
-)
-
 (defwindow stats
   :monitor 0
   :geometry (geometry
     :x 0
     :y 0
-    :width 520
+    :width 790
     :anchor "top right"
   )
   :stacking "fg"
   :exclusive false
   :focusable false
   (box
-    :width 520
-    :height 370
+    :width 790
+    :height 325
     :visible {statsvisible}
     :class "statwindow"
+    :space-evenly false
     (box
       :orientation "v"
+      :space-evenly false
       :valign "start"
-      :class "leftstat"
       (box
-        :class "progress"
-        :valign "center"
+        :halign "end"
+        :valign "start"
+        :class "leftstat spot"
         :space-evenly false
-        (progress
-          :value {EWW_CPU.avg}
-          :class "bar firstbar"
+        (box
+          :orientation "v"
+          :valign "center"
+          :halign "end"
+          :class "leftstat"
+          (box
+            :orientation "v"
+            :space-evenly false
+            :class "song-info"
+            (label :text {title} :class "title" :wrap true :limit-width 20)
+            (label :text {artist} :class "artist" :wrap true :limit-width 40)
+            (label :text {album} :class "album" :limit-width 40)
+          )
+          (centerbox
+            :class "actions"
+            :width 275
+            (button
+              :onclick "playerctl back"
+              (image
+                :path "/usr/share/icons/ePapirus-Dark/22x22/actions/media-seek-backward.svg"
+                :image-height 50
+                :image-width 50
+              )
+            )
+            (button
+              :onclick "playerctl play-pause"
+              (image
+                :path "/usr/share/icons/ePapirus-Dark/22x22/actions/media-playback-pause.svg"
+                :image-height 45
+                :image-width 45
+              )
+            )
+            (button
+              :onclick "playerctl next"
+              (image
+                :path "/usr/share/icons/ePapirus-Dark/22x22/actions/media-seek-forward.svg"
+                :image-height 50
+                :image-width 50
+              )
+            )
+          )
         )
-        (icon :name "cpu.png" :scale 25)
+        (box
+          :class "cover"
+          (image
+            :path {cover}
+            :image-height 150
+            :image-width 150
+          )
+        )
       )
-      (box
-        :class "progress"
-        :valign "center"
-        :space-evenly false
-        (progress
-          :value {EWW_RAM.used_mem_perc}
-          :class "bar"
-        )
-        (icon :name "memory.png" :scale 27)
-      )
-      (box
-        :class "progress"
-        :valign "center"
-        :space-evenly false
-        (progress
-          :value {EWW_DISK["/"].used_perc}
-          :class "bar"
-        )
-        (icon :name "storage.png" :scale 26)
-      )
-      (box
-        :class "progress"
-        :valign "center"
-        :space-evenly false
-        (progress
-          :value {brightness / 960}
-          :class "bar"
-        )
-        (icon :name "brightness_${brightness / 960 < 25 ? "low" : brightness / 960 < 50 ? "down" : brightness / 960 < 75 ? "mid" : "high"}.png" :scale 26)
+      (progress
+        :value {position}
+        :width 10
+        :class "songprog"
       )
     )
     (box
       :class "clock"
       :valign "start"
+      :halign "end"
+      :orientation "v"
+      :space-evenly false
       (clock :align "end")
+      (box
+        :orientation "v"
+        :valign "start"
+        :class "leftstat"
+        (box
+          :class "progress"
+          :valign "center"
+          :space-evenly false
+          (progress
+            :value {EWW_CPU.avg}
+            :class "bar firstbar"
+          )
+          (icon :name "cpu.png" :scale 25)
+        )
+        (box
+          :class "progress"
+          :valign "center"
+          :space-evenly false
+          (progress
+            :value {EWW_RAM.used_mem_perc}
+            :class "bar"
+          )
+          (icon :name "memory.png" :scale 27)
+        )
+        (box
+          :class "progress"
+          :valign "center"
+          :space-evenly false
+          (progress
+            :value {brightness / 960}
+            :class "bar"
+          )
+          (icon :name "brightness_${brightness / 960 < 25 ? "low" : brightness / 960 < 50 ? "down" : brightness / 960 < 75 ? "mid" : "high"}.png" :scale 26)
+        )
+      )
     )
   )
 )
@@ -427,112 +522,6 @@
       :path "/usr/share/icons/Papirus/48x48/apps/${image}.svg"
       :image-width 70
       :image-height 70
-    )
-  )
-)
-
-(deflisten cover
-  :initial ""
-  "/home/ezra/.config/eww/cover.sh"
-)
-
-(deflisten title
-  :initial ""
-  "playerctl --follow metadata --format {{title}}"
-)
-
-(deflisten artist
-  :initial ""
-  "playerctl --follow metadata --format {{artist}}"
-)
-
-(deflisten album
-  :initial ""
-  "playerctl --follow metadata --format {{album}}"
-)
-
-(deflisten length
-  :initial "0"
-  "playerctl --follow metadata --format {{mpris:length}}"
-)
-
-(deflisten position
-  :initial 0
-  "playerctl --follow position"
-)
-
-(deflisten playing
-  :initial "Paused"
-  "playerctl --follow status"
-)
-
-(defwindow spotify
-  :monitor 0
-  :geometry (geometry
-    :x "60px"
-    :y "100px"
-    :width "800px"
-    :height "250px"
-    :anchor "top right"
-  )
-  :stacking "bg"
-  :exclusive false
-  :focusable false
-  (box
-    :halign "end"
-    :valign "start"
-    (box
-      :orientation "v"
-      :valign "center"
-      :halign "end"
-      :width 300
-      (box
-        :orientation "v"
-        :class "song-info"
-        (label :text {title} :class "title" :wrap true :limit-width 20)
-        (label :text {artist} :class "artist" :wrap true :limit-width 40)
-        (label :text {album} :class "album" :limit-width 40)
-      )
-      (progress
-        :value {position}
-        :width 200
-        :orientation "h"
-      )
-      (centerbox
-        :class "actions"
-        (button
-          :onclick "playerctl back"
-          (image
-            :path "/usr/share/icons/ePapirus-Dark/22x22/actions/media-seek-backward.svg"
-            :image-height 50
-            :image-width 50
-          )
-        )
-        (button
-          :onclick "playerctl play-pause"
-          (image
-            :path "/usr/share/icons/ePapirus-Dark/22x22/actions/media-playback-pause.svg"
-            :image-height 45
-            :image-width 45
-          )
-        )
-        (button
-          :onclick "playerctl next"
-          (image
-            :path "/usr/share/icons/ePapirus-Dark/22x22/actions/media-seek-forward.svg"
-            :image-height 50
-            :image-width 50
-          )
-        )
-      )
-    )
-    (box
-      :class "cover"
-      (image
-        :path {cover}
-        :image-height 250
-        :image-width 250
-      )
     )
   )
 )
