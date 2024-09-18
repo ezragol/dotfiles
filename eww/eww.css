@@ -159,6 +159,7 @@ progressbar > trough > progress {
 scale > contents > trough {
     border: none;
     background-color: rgba(74, 82, 96, 0.396);
+    border-radius: 7px;
 }
 
 scale > contents > trough > slider {
@@ -249,4 +250,18 @@ progressbar > trough > progress {
 
 .songprog {
     margin: 9px 19px 0 45px;
+}
+
+.statshead {
+    margin: 20px 0 -40px -100px;
+}
+
+.header {
+    font-family: 'Red Hat Display';
+    font-weight: 800;
+    text-decoration: underline;
+}
+
+.calendar {
+    margin: 60px 0 0 30px;
 }

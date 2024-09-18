@@ -1,10 +1,10 @@
 CC=clang
-ARGS=-lcurl
+ARGS=-lcurl -lpq
 
 OUTPUT=update_calendar
-INPUT=hypr/calendar/calendar.c
+INPUT=calendar.c
 
-all: $(INPUT)
+all: calendar
 
 calendar: $(INPUT)
-	$(CC) -o $(OUTPUT) $@ $(ARGS)
+	$(CC) -o $(OUTPUT) $^ $(ARGS)

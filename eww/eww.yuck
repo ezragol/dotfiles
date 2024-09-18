@@ -90,6 +90,8 @@
   "cat /sys/class/backlight/intel_backlight/brightness"
 )
 
+(defvar statslide true)
+
 (defwidget clock [align]
   (box
     :space-evenly false
@@ -183,7 +185,7 @@
         )
         (hoverbtn
           :name "chrome"
-          :onclick "/home/ezra/.config/eww/select.sh Google-chrome google-chrome-stable flags --ozone-platform-hint=auto --ozone-platform=wayland &"
+          :onclick "/home/ezra/.config/eww/select.sh google-chrome google-chrome-stable flags --ozone-platform-hint=auto --ozone-platform=wayland &"
           :class "launchbtn"
           (box
             :space-evenly false
@@ -346,56 +348,92 @@
       :orientation "v"
       :space-evenly false
       :valign "start"
-      :visible {artist != ""}
       (box
-        :halign "end"
-        :valign "start"
-        :class "leftstat spot"
-        :space-evenly false
+        :halign "fill"
+        :width 530
+        :class "statshead"
+        (label :text {statslide ? "calendar" : "spotify"} :class "header")
+        (box
+          :halign "end"
+          :space-evenly false
+          (button
+            :onclick "eww update statslide=${!statslide}"
+            (box
+              (icon :name "arrow_left.png" :scale 22)
+              (icon :name "arrow_right.png" :scale 22)
+            )
+          )
+        )
+      )
+      (box
+        :visible {statslide}
+        :class "calendar"
         (box
           :orientation "v"
-          :valign "center"
+          :halign "start"
+          (percent
+            :value {EWW_DISK["/"].used_perc}
+            :style "color: ${EWW_DISK["/"].used_perc > 75 ? EWW_DISK["/"].used_perc > 90 ? "red" : "orange" : "white"}"
+            :label "${round(EWW_DISK["/"].used / 1000000000, 0)}Gb"
+          )
+        )
+      )
+      (box
+        :orientation "v"
+        :space-evenly false
+        :valign "start"
+        :visible {!statslide && artist != ""}
+        (box
           :halign "end"
-          :class "leftstat"
+          :valign "start"
+          :class "leftstat spot"
+          :space-evenly false
           (box
             :orientation "v"
-            :space-evenly false
-            :class "song-info"
-            (label :text {title} :class "title" :wrap true :limit-width 20)
-            (label :text {artist} :class "artist" :wrap true :limit-width 40)
-            (label :text {album} :class "album" :limit-width 40)
+            :valign "center"
+            :halign "end"
+            :class "leftstat"
+            (box
+              :orientation "v"
+              :space-evenly false
+              :class "song-info"
+              (label :text {title} :class "title" :wrap true :limit-width 20)
+              (label :text {artist} :class "artist" :wrap true :limit-width 40)
+              (label :text {album} :class "album" :limit-width 40)
+            )
+            (centerbox
+              :class "actions"
+              :width 275
+              (button
+                :onclick "playerctl previous"
+                (icon :name "audio_back_white.png" :scale 33)
+              )
+              (button
+                :onclick "playerctl play-pause"
+                (icon :name "audio_${playing == "Playing" ? "pause" : "play"}_white.png" :scale 33)
+              )
+              (button
+                :onclick "playerctl next"
+                (icon :name "audio_next_white.png" :scale 33)
+              )
+            )
           )
-          (centerbox
-            :class "actions"
-            :width 275
-            (button
-              :onclick "playerctl previous"
-              (icon :name "audio_back_white.png" :scale 33)
-            )
-            (button
-              :onclick "playerctl play-pause"
-              (icon :name "audio_${playing == "Playing" ? "pause" : "play"}_white.png" :scale 33)
-            )
-            (button
-              :onclick "playerctl next"
-              (icon :name "audio_next_white.png" :scale 33)
+          (box
+            :class "cover"
+            (image
+              :path {cover}
+              :image-height 165
+              :image-width 165
             )
           )
         )
-        (box
-          :class "cover"
-          (image
-            :path {cover}
-            :image-height 165
-            :image-width 165
-          )
+        (progress
+          :value {position}
+          :width 10
+          :class "songprog"
         )
       )
-      (progress
-        :value {position}
-        :width 10
-        :class "songprog"
-      )
+      
     )
     (box
       :class "clock"
@@ -454,53 +492,6 @@
     (label
       :class "gauge-label"
       :text {label}
-    )
-  )
-)
-
-(defwidget dashboard [align]
-  (box :orientation "v"
-    :valign "start"
-    :halign {align}
-    (box
-      :class "time"
-      (clock :align {align})
-    )
-    (box
-      :class "info"
-      :space-evenly true
-      :spacing 30
-      (percent
-        :value {EWW_RAM.used_mem_perc}
-        :style "color: ${EWW_RAM.used_mem_perc > 75 ? EWW_RAM.used_mem_perc > 90 ? "red" : "orange" : "white"}"
-        :label "${round(EWW_RAM.used_mem / 1000000000, 1)}Gb"
-      )
-      (percent
-        :clockwise true
-        :value {EWW_BATTERY.BAT0.capacity}
-        :style "color: ${EWW_BATTERY.BAT0.status == "Charging" ? "cyan" : EWW_BATTERY.BAT0.capacity < 50 ? EWW_BATTERY.BAT0.capacity < 25 ? "red" : "orange" : "white"}"
-        :label "${EWW_BATTERY.BAT0.capacity}%"
-      )
-      (percent
-        :value {EWW_DISK["/"].used_perc}
-        :style "color: ${EWW_DISK["/"].used_perc > 75 ? EWW_DISK["/"].used_perc > 90 ? "red" : "orange" : "white"}"
-        :label "${round(EWW_DISK["/"].used / 1000000000, 0)}Gb"
-      )
-    )
-    (centerbox
-      :class "labels"
-      (label
-        :text "ram"
-        :xalign 0.5
-      )
-      (label
-        :text "battery"
-        :xalign 0.5
-      )
-      (label
-        :text "disk"
-        :xalign 0.5
-      )
     )
   )
 )
