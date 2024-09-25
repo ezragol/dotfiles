@@ -93,6 +93,12 @@
   :run-while {statsvisible}
 "makoctl list")
 
+(defpoll notifhistory
+  :interval "1s"
+  :initial ""
+  :run-while {statsvisible}
+"makoctl history")
+
 (defvar statslide true)
 
 (defwidget clock [align]
@@ -142,39 +148,76 @@
   (icon :name "volume_${muted == "yes" ? "off" : volume < 100 ? volume == 0 ? "mute" : "low" : "high"}.png" :scale {scale})
 )
 
-(defwidget notifcenter []
+(defwidget notiflist [list ?clickable]
   (box
     :orientation "v"
     :space-evenly false
-    :halign "start"
     :valign "start"
-    (for notif in {notifications.data[0]}
+    :halign "start"
+    (for notif in {list}
       (box
-        :space-evenly false
-        :halign "start"
         :class "notif"
-        (box
-          :class "notif-icon"
-          (icon :name "${notif.app-name.data == "Spotify" ? "spotify_white.svg" : notif.app-name.data == "Google Chrome" ? "chrome_white.png" : ""}" :scale 40)
-        )
-        (box
-          :orientation "v"
-          :halign "start"
-          :valign "center"
-          :space-evenly false
-          (label :text {notif.summary.data} :class "notif-title" :xalign 0 :wrap true :width 200)
-          (label :text {notif.body.data} :class "notif-sub" :xalign 0 :wrap true :width 200)
+        (hoverbtn
+          :name "notif-${notif.id.data}"
+          :class {clickable == true ? "not" : "nohover"}
+          :onclick "makoctl dismiss -n ${notif.id.data}"
+          (box
+            :space-evenly false
+            :halign "start"
+            :class "notif-interior"
+            (box
+              :class "notif-icon"
+              (icon :name "${notif.app-name.data == "Spotify" ? "spotify_white.svg" : notif.app-name.data == "Google Chrome" ? "chrome_white.png" : ""}" :scale 40)
+            )
+            (box
+              :orientation "v"
+              :halign "start"
+              :valign "center"
+              :space-evenly false
+              (label :text {notif.summary.data} :class "notif-title" :xalign 0 :wrap true :width 200)
+              (label :text {notif.body.data} :class "notif-sub" :xalign 0 :wrap true :width 200)
+            )
+          )
         )
       )
     )
+  )
+)
+
+(defwidget notifcenter []
+  (scroll
+    :vscroll true
+    :height 200
     (box
-      :class "no-notif"
-      :halign "center"
-      :valign "center"
-      :visible {notifications.data[0][0] == "null"}
-      :width 300
-      :height 200
-      (label :xalign 0.85 :yalign 0.55 :text "no new notifications")
+      :orientation "v"
+      :space-evenly false
+      (box
+        :orientation "v"
+        :space-evenly false
+        :halign "start"
+        :valign "start"
+        :visible {notifications.data[0][0] != "null"}
+        (label :xalign 0 :text "unread" :class "notifblock-label")
+        (notiflist :list {notifications.data[0]} :clickable true)
+      )
+      (box
+        :orientation "v"
+        :space-evenly false
+        :halign "start"
+        :valign "start"
+        :visible {notifhistory.data[0][0] != "null"}
+        (label :xalign 0 :text "older" :class "notifblock-label")
+        (notiflist :list {notifhistory.data[0]})
+      )
+      (box
+        :class "no-notif"
+        :halign "center"
+        :valign "center"
+        :visible {notifications.data[0][0] == "null" && notifhistory.data[0] == "null"}
+        :width 400
+        :height 200
+        (label :xalign 0.56 :yalign 0.57 :text "no new notifications")
+      )
     )
   )
 )
@@ -411,8 +454,13 @@
         :space-evenly false
         :halign "fill"
         (box
+          :class "cal"
+          :width 450
+          (notifcenter)
+        )
+        (box
           :orientation "v"
-          :halign "start"
+          :halign "end"
           :valign "start"
           :space-evenly false
           (box
@@ -438,18 +486,15 @@
           )
           (label :class "statlab" :text "disk usage")
         )
-        (box
-          :class "cal"
-          (notifcenter)
-        )
       )
       (box
         :orientation "v"
         :space-evenly false
         :valign "start"
         :visible {!statslide && artist != ""}
+        :width 549
         (box
-          :halign "end"
+          :halign "center"
           :valign "start"
           :class "leftstat spot"
           :space-evenly false

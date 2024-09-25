@@ -233,7 +233,7 @@ scale > contents > trough > highlight  {
 }
 
 .leftstat {
-    margin: 5px 25px 0 10px;
+    margin: 5px 15px 0 0;
 }
 
 progressbar > trough > progress {
@@ -253,7 +253,7 @@ progressbar > trough > progress {
 }
 
 .statshead {
-    margin: 20px 0 -40px -100px;
+    margin: 20px 6px -50px -100px;
 }
 
 .header {
@@ -269,8 +269,8 @@ progressbar > trough > progress {
 }
 
 .cal {
-    margin-left: 35px;
-    margin-top: -12px;
+    margin-right: 35px;
+    margin-top: -7px;
 }
 
 calendar {
@@ -285,6 +285,9 @@ calendar {
 .notif {
     margin: 0 0 10px 0;
     border: 1px solid white;
+}
+
+.notif-interior {
     padding: 12px;
 }
 
@@ -307,4 +310,20 @@ calendar {
     font-family: monospace;
     font-size: 18px;
     font-weight: 800;
+}
+
+.not {
+    transition: background-color 0.25s;
+}
+
+.not.hovered {
+    background-color: rgba(80, 83, 92, 0.932);
+}
+
+.nohover.hovered {
+    background-color: rgba(35, 38, 46, 0.932);
+}
+
+.notifblock-label {
+    margin: 0 0 5px 0;
 }
