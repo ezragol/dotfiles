@@ -561,7 +561,15 @@
           :class "songprog"
         )
       )
-      
+      (box
+        :class "no-notif"
+        :halign "center"
+        :valign "center"
+        :visible {!statslide && artist == ""}
+        :width 549
+        :height 300
+        (label :xalign 0.5 :yalign 0.57 :text "no music playing")
+      )
     )
     (box
       :class "clock"
