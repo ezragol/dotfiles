@@ -213,10 +213,12 @@ scale > contents > trough > highlight  {
 
 .statwindow .bigtime {
     font-size: 54px;
+    margin-right: -8px;
 }
 
 .statwindow .date {
     font-weight: 800;
+    margin-right: -10px;
 }
 
 .clock {
@@ -326,4 +328,8 @@ calendar {
 
 .notifblock-label {
     margin: 0 0 5px 0;
+}
+
+.disks {
+    margin-top: 20px;
 }

@@ -222,6 +222,22 @@
   )
 )
 
+(defwidget percent [value style label ?clockwise]
+  (circular-progress
+    :thickness 5
+    :clockwise {clockwise == true ? true : false}
+    :start-at 75
+    :value {value}
+    :style {style}
+    (label
+      :class "gauge-label"
+      :text {label}
+    )
+  )
+)
+
+; ------------------------------ windows --------------------------------
+
 (defwindow dock
   :monitor 0
   :geometry (geometry
@@ -462,6 +478,7 @@
           :orientation "v"
           :halign "end"
           :valign "start"
+          :class "disks"
           :space-evenly false
           (box
             :class "disk"
@@ -471,6 +488,7 @@
               :value {EWW_TEMPS["CORETEMP_CORE_0"]}
               :style "color: ${EWW_TEMPS["CORETEMP_CORE_0"] > 40 ? EWW_TEMPS["CORETEMP_CORE_0"] > 50 ? "red" : "orange" : "white"}"
               :label "${EWW_TEMPS["CORETEMP_CORE_0"]}°C"
+              :clockwise true
             )
           )
           (label :class "statlab" :text "cpu temp")
@@ -587,31 +605,6 @@
           (icon :name "brightness_${brightness / 960 < 25 ? "low" : brightness / 960 < 50 ? "down" : brightness / 960 < 75 ? "mid" : "high"}.png" :scale 26)
         )
       )
-    )
-  )
-)
-
-(defwidget percent [value style label ?clockwise]
-  (circular-progress
-    :thickness 5
-    :clockwise {clockwise == true ? true : false}
-    :start-at 75
-    :value {value}
-    :style {style}
-    (label
-      :class "gauge-label"
-      :text {label}
-    )
-  )
-)
-
-(defwidget app [click image]
-  (button
-    :onclick {click}
-    (image
-      :path "/usr/share/icons/Papirus/48x48/apps/${image}.svg"
-      :image-width 70
-      :image-height 70
     )
   )
 )
