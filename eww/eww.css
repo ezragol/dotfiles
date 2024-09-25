@@ -51,7 +51,7 @@ button {
 
 .battery label, .ram label, .disk label {
     color: white;
-    font-size: 22px;
+    font-size: 14px;
     font-weight: 800;
 }
 
@@ -260,8 +260,51 @@ progressbar > trough > progress {
     font-family: 'Red Hat Display';
     font-weight: 800;
     text-decoration: underline;
+    margin-top: -3px;
+    margin-left: 130px;
 }
 
 .calendar {
     margin: 60px 0 0 30px;
+}
+
+.cal {
+    margin-left: 35px;
+    margin-top: -12px;
+}
+
+calendar {
+    border: none;
+    font-weight: 800;
+}
+
+.statlab {
+    margin: 3px 0 16px 0;
+}
+
+.notif {
+    margin: 0 0 10px 0;
+    border: 1px solid white;
+    padding: 12px;
+}
+
+.notif-title {
+    font-family: monospace;
+    font-size: 16px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.notif-sub {
+    font-family: monospace;
+}
+
+.notif-icon {
+    margin-right: 12px;
+}
+
+.no-notif {
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: 800;
 }

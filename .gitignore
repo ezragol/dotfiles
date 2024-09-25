@@ -5,6 +5,8 @@
 
 !/hypr
 !/hypr/*
+!/mako
+!/mako/config
 !README.md
 !.gitignore
 /hypr/calendar/update_calendar

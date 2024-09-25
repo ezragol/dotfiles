@@ -1,23 +1,3 @@
-(defwindow dashboard
-  :monitor 0
-  :geometry (geometry
-    :x "60px"
-    :y "80px"
-    :width "370px"
-    :height "100%"
-    :anchor "left top"
-  )
-  :stacking "bg"
-  :exclusive false
-  :focusable false
-  (box
-    :orientation "v"
-    :valign "fill"
-    (dashboard :align "start")
-    ; (launcher)
-  )
-)
-
 (defvar powerreveal false)
 (defvar volumereveal false)
 (defvar musicreveal false)
@@ -41,12 +21,6 @@
 (defvar losthover "")
 
 (defvar statsvisible false)
-
-(defpoll pos
-  :interval "1s"
-  :initial "0"
-  "playerctl position"
-)
 
 (deflisten cover
   :initial ""
@@ -73,9 +47,17 @@
   "playerctl --follow metadata --format {{mpris:length}}"
 )
 
+(defpoll pos
+  :interval "1s"
+  :initial "0"
+  :run-while {artist != ""}
+  "playerctl position"
+)
+
 (defpoll position
   :initial 0
   :interval "1s"
+  :run-while {artist != ""}
   "/home/ezra/.config/hypr/position.sh"
 )
 
@@ -89,6 +71,27 @@
   :run-while {statsvisible}
   "cat /sys/class/backlight/intel_backlight/brightness"
 )
+
+(defpoll numchrome
+  :interval "10s"
+  :initial 0
+"/home/ezra/.config/eww/num.sh google-chrome")
+
+(defpoll numspotify
+  :interval "10s"
+  :initial 0
+"/home/ezra/.config/eww/num.sh Spotify")
+
+(defpoll numcode
+  :interval "10s"
+  :initial 0
+"/home/ezra/.config/eww/num.sh Code")
+
+(defpoll notifications
+  :interval "1s"
+  :initial ""
+  :run-while {statsvisible}
+"makoctl list")
 
 (defvar statslide true)
 
@@ -137,6 +140,43 @@
 
 (defwidget volumeicon [scale]
   (icon :name "volume_${muted == "yes" ? "off" : volume < 100 ? volume == 0 ? "mute" : "low" : "high"}.png" :scale {scale})
+)
+
+(defwidget notifcenter []
+  (box
+    :orientation "v"
+    :space-evenly false
+    :halign "start"
+    :valign "start"
+    (for notif in {notifications.data[0]}
+      (box
+        :space-evenly false
+        :halign "start"
+        :class "notif"
+        (box
+          :class "notif-icon"
+          (icon :name "${notif.app-name.data == "Spotify" ? "spotify_white.svg" : notif.app-name.data == "Google Chrome" ? "chrome_white.png" : ""}" :scale 40)
+        )
+        (box
+          :orientation "v"
+          :halign "start"
+          :valign "center"
+          :space-evenly false
+          (label :text {notif.summary.data} :class "notif-title" :xalign 0 :wrap true :width 200)
+          (label :text {notif.body.data} :class "notif-sub" :xalign 0 :wrap true :width 200)
+        )
+      )
+    )
+    (box
+      :class "no-notif"
+      :halign "center"
+      :valign "center"
+      :visible {notifications.data[0][0] == "null"}
+      :width 300
+      :height 200
+      (label :xalign 0.85 :yalign 0.55 :text "no new notifications")
+    )
+  )
 )
 
 (defwindow dock
@@ -190,7 +230,7 @@
           (box
             :space-evenly false
             (icon :name "chrome.png" :class "song" :scale 20)
-            (label :class "percent" :text "chrome")
+            (label :class "percent" :text "chrome${numchrome > 0 ? ' ('+numchrome+')' : ''}")
           )
         )
         (hoverbtn
@@ -200,7 +240,7 @@
           (box
             :space-evenly false
             (icon :name "spotify.svg" :class "song")
-            (label :class "percent" :text "spotify")
+            (label :class "percent" :text "spotify${numspotify > 0 ? ' ('+numspotify+')' : ''}")
           )
         )
         (hoverbtn
@@ -210,7 +250,7 @@
           (box
             :space-evenly false
             (icon :name "code.svg" :class "song")
-            (label :class "percent" :text "vscode")
+            (label :class "percent" :text "vscode${numcode > 0 ? ' ('+numcode+')' : ''}")
           )
         )
       )
@@ -352,7 +392,7 @@
         :halign "fill"
         :width 530
         :class "statshead"
-        (label :text {statslide ? "calendar" : "spotify"} :class "header")
+        (label :text {statslide ? "notifications" : "spotify"} :class "header" :halign "start")
         (box
           :halign "end"
           :space-evenly false
@@ -368,14 +408,39 @@
       (box
         :visible {statslide}
         :class "calendar"
+        :space-evenly false
+        :halign "fill"
         (box
           :orientation "v"
           :halign "start"
-          (percent
-            :value {EWW_DISK["/"].used_perc}
-            :style "color: ${EWW_DISK["/"].used_perc > 75 ? EWW_DISK["/"].used_perc > 90 ? "red" : "orange" : "white"}"
-            :label "${round(EWW_DISK["/"].used / 1000000000, 0)}Gb"
+          :valign "start"
+          :space-evenly false
+          (box
+            :class "disk"
+            :width 65
+            :height 65
+            (percent
+              :value {EWW_TEMPS["CORETEMP_CORE_0"]}
+              :style "color: ${EWW_TEMPS["CORETEMP_CORE_0"] > 40 ? EWW_TEMPS["CORETEMP_CORE_0"] > 50 ? "red" : "orange" : "white"}"
+              :label "${EWW_TEMPS["CORETEMP_CORE_0"]}°C"
+            )
           )
+          (label :class "statlab" :text "cpu temp")
+          (box
+            :class "disk"
+            :width 65
+            :height 65
+            (percent
+              :value {EWW_DISK["/"].used_perc}
+              :style "color: ${EWW_DISK["/"].used_perc > 75 ? EWW_DISK["/"].used_perc > 90 ? "red" : "orange" : "white"}"
+              :label "${round(EWW_DISK["/"].used / 1000000000, 0)}Gb"
+            )
+          )
+          (label :class "statlab" :text "disk usage")
+        )
+        (box
+          :class "cal"
+          (notifcenter)
         )
       )
       (box
@@ -483,9 +548,8 @@
 
 (defwidget percent [value style label ?clockwise]
   (circular-progress
-    :thickness 10
+    :thickness 5
     :clockwise {clockwise == true ? true : false}
-    :class "gauge"
     :start-at 75
     :value {value}
     :style {style}
