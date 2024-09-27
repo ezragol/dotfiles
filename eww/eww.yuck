@@ -109,7 +109,7 @@
     (box
       :class "bigtime"
       :halign {align}
-      {formattime(EWW_TIME, "%R")}
+      {formattime(EWW_TIME, "%l:%M")}
     )
     (box
       :class "date"
@@ -187,7 +187,7 @@
 (defwidget notifcenter []
   (scroll
     :vscroll true
-    :height 200
+    :height 220
     (box
       :orientation "v"
       :space-evenly false
@@ -213,10 +213,10 @@
         :class "no-notif"
         :halign "center"
         :valign "center"
-        :visible {notifications.data[0][0] == "null" && notifhistory.data[0] == "null"}
-        :width 400
+        :visible {notifications.data[0][0] == "null" && notifhistory.data[0][0] == "null"}
+        :width 380
         :height 200
-        (label :xalign 0.56 :yalign 0.57 :text "no new notifications")
+        (label :xalign 0.56 :yalign 0.59 :text "no new notifications")
       )
     )
   )
@@ -242,8 +242,8 @@
   :monitor 0
   :geometry (geometry
     :x 0
-    :y 0
-    :width "100%"
+    :y 4
+    :width 1912
     :anchor "top center"
   )
   :stacking "fg"
@@ -319,54 +319,6 @@
         :class "right-side"
         :space-evenly false
         (revealer
-          :reveal {musicreveal && artist != ""}
-          :transition "slideright"
-          :duration "250ms"
-          (box
-            :space-evenly false
-            (label :class "song" :text {title} :wrap true :limit-width 20)
-            (hoverbtn
-              :name "audioback"
-              :class ""
-              :onclick "playerctl back"
-              (icon :name "audio_back.png" :scale 23)
-            )
-            (hoverbtn
-              :name "audioplay"
-              :class ""
-              :onclick "playerctl play-pause"
-              (icon :name "audio_${playing == "Paused" ? "play" : "pause"}.png" :scale 20)
-            )
-            (hoverbtn
-              :name "audionext"
-              :class "song"
-              :onclick "playerctl next"
-              (icon :name "audio_next.png" :scale 23)
-            )
-            "("
-              (label :text {(round(pos / 60, 0) < (pos / 60) ? round(pos / 60, 0) : (round(pos / 60, 0) - 1))})
-              ":"
-              (zerobasednum
-                :num {(round(pos % 60, 0) < (pos % 60) ? round(pos % 60, 0) : (round(pos % 60, 0) - 1))}
-                :class ""
-              )
-              "/ "
-              (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
-              ":"
-              (zerobasednum
-                :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
-                :class ""
-              )
-              (label :class "song" :text ")")
-          )
-        )
-        (hoverbtn
-          :name "music"
-          :onclick "eww update musicreveal=${!musicreveal}"
-          :class "pbutton"
-          (icon :name "music.png")
-        )
-        (revealer
           :reveal {wifireveal}
           :transition "slideright"
           :duration "250ms"
@@ -415,12 +367,6 @@
           :class "percent right"
           :text {formattime(EWW_TIME, "%l:%M %p")}
         )
-        (hoverbtn
-          :name "stats"
-          :class "volbtn"
-          :onclick "eww update statsvisible=${!statsvisible}"
-          (icon :name "stats.png" :scale 20)
-        )
       )
     )
   )
@@ -432,14 +378,14 @@
     :x 0
     :y 0
     :width 845
-    :anchor "top right"
+    :anchor "center"
   )
   :stacking "fg"
   :exclusive false
   :focusable false
   (box
     :width 845
-    :height 325
+    :height 310
     :visible {statsvisible}
     :class "statwindow"
     :space-evenly false
@@ -449,20 +395,9 @@
       :valign "start"
       (box
         :halign "fill"
-        :width 530
+        :width 470
         :class "statshead"
         (label :text {statslide ? "notifications" : "spotify"} :class "header" :halign "start")
-        (box
-          :halign "end"
-          :space-evenly false
-          (button
-            :onclick "eww update statslide=${!statslide}"
-            (box
-              (icon :name "arrow_left.png" :scale 22)
-              (icon :name "arrow_right.png" :scale 22)
-            )
-          )
-        )
       )
       (box
         :visible {statslide}
@@ -471,38 +406,8 @@
         :halign "fill"
         (box
           :class "cal"
-          :width 450
+          :width 445
           (notifcenter)
-        )
-        (box
-          :orientation "v"
-          :halign "end"
-          :valign "start"
-          :class "disks"
-          :space-evenly false
-          (box
-            :class "disk"
-            :width 65
-            :height 65
-            (percent
-              :value {EWW_TEMPS["CORETEMP_CORE_0"]}
-              :style "color: ${EWW_TEMPS["CORETEMP_CORE_0"] > 40 ? EWW_TEMPS["CORETEMP_CORE_0"] > 50 ? "red" : "orange" : "white"}"
-              :label "${EWW_TEMPS["CORETEMP_CORE_0"]}°C"
-              :clockwise true
-            )
-          )
-          (label :class "statlab" :text "cpu temp")
-          (box
-            :class "disk"
-            :width 65
-            :height 65
-            (percent
-              :value {EWW_DISK["/"].used_perc}
-              :style "color: ${EWW_DISK["/"].used_perc > 75 ? EWW_DISK["/"].used_perc > 90 ? "red" : "orange" : "white"}"
-              :label "${round(EWW_DISK["/"].used / 1000000000, 0)}Gb"
-            )
-          )
-          (label :class "statlab" :text "disk usage")
         )
       )
       (box
@@ -510,7 +415,8 @@
         :space-evenly false
         :valign "start"
         :visible {!statslide && artist != ""}
-        :width 549
+        :width 450
+        :class "leftside"
         (box
           :halign "center"
           :valign "start"
@@ -550,15 +456,37 @@
             :class "cover"
             (image
               :path {cover}
-              :image-height 165
-              :image-width 165
+              :image-height 140
+              :image-width 140
             )
           )
         )
         (progress
           :value {position}
-          :width 10
           :class "songprog"
+        )
+        (box
+          :class "songprog num"
+          (box
+            :space-evenly false
+            :halign "start"
+            (label :text {(round(pos / 60, 0) < (pos / 60) ? round(pos / 60, 0) : (round(pos / 60, 0) - 1))})
+            ":"
+            (zerobasednum
+              :num {(round(pos % 60, 0) < (pos % 60) ? round(pos % 60, 0) : (round(pos % 60, 0) - 1))}
+              :class ""
+            )
+          )
+          (box
+            :space-evenly false
+            :halign "end"
+            (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
+            ":"
+            (zerobasednum
+              :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
+              :class ""
+            )
+          )
         )
       )
       (box
@@ -566,10 +494,52 @@
         :halign "center"
         :valign "center"
         :visible {!statslide && artist == ""}
-        :width 549
+        :width 475
         :height 300
         (label :xalign 0.5 :yalign 0.57 :text "no music playing")
       )
+    )
+    (box
+      :orientation "v"
+      :halign "end"
+      :valign "start"
+      :class "disks"
+      :space-evenly false
+      (box
+        :halign "center"
+        :space-evenly false
+        :class "toggle"
+        (button
+          :onclick "eww update statslide=${!statslide}"
+          (box
+            (icon :name "arrow_left.png" :scale 22)
+            (icon :name "arrow_right.png" :scale 22)
+          )
+        )
+      )
+      (box
+        :class "disk"
+        :width 65
+        :height 65
+        (percent
+          :value {EWW_TEMPS["CORETEMP_CORE_0"]}
+          :style "color: ${EWW_TEMPS["CORETEMP_CORE_0"] > 40 ? EWW_TEMPS["CORETEMP_CORE_0"] > 50 ? "red" : "orange" : "white"}"
+          :label "${EWW_TEMPS["CORETEMP_CORE_0"]}°C"
+          :clockwise true
+        )
+      )
+      (label :class "statlab" :text "cpu temp")
+      (box
+        :class "disk"
+        :width 65
+        :height 65
+        (percent
+          :value {EWW_DISK["/"].used_perc}
+          :style "color: ${EWW_DISK["/"].used_perc > 75 ? EWW_DISK["/"].used_perc > 90 ? "red" : "orange" : "white"}"
+          :label "${round(EWW_DISK["/"].used / 1000000000, 0)}Gb"
+        )
+      )
+      (label :class "statlab" :text "disk usage")
     )
     (box
       :class "clock"
