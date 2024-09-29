@@ -3,9 +3,11 @@
 STATUS=$(eww get statsvisible)
 
 if [ "$STATUS" = "true" ]; then
-    hyprctl dispatch togglespecialworkspace stats
     eww update statsvisible=false
+    exec /home/ezra/.config/hypr/windows.sh 1.0 &
+    eww close stats
 else
-    hyprctl dispatch togglespecialworkspace stats
+    eww open stats
+    exec /home/ezra/.config/hypr/windows.sh 0.0 &
     eww update statsvisible=true
 fi

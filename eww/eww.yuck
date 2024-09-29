@@ -3,6 +3,7 @@
 (defvar musicreveal false)
 (defvar wifireveal false)
 (defvar wifi "")
+(defvar dnd false)
 
 (deflisten volume
   :initial 0
@@ -50,14 +51,14 @@
 (defpoll pos
   :interval "1s"
   :initial "0"
-  :run-while {artist != ""}
+  :run-while {artist != "" && statsvisible}
   "playerctl position"
 )
 
 (defpoll position
   :initial 0
   :interval "1s"
-  :run-while {artist != ""}
+  :run-while {artist != "" && statsvisible}
   "/home/ezra/.config/hypr/position.sh"
 )
 
@@ -242,8 +243,8 @@
   :monitor 0
   :geometry (geometry
     :x 0
-    :y 4
-    :width 1912
+    :y 5
+    :width 1910
     :anchor "top center"
   )
   :stacking "fg"
@@ -309,14 +310,13 @@
           (box
             :space-evenly false
             (icon :name "code.svg" :class "song")
-            (label :class "percent" :text "vscode${numcode > 0 ? ' ('+numcode+')' : ''}")
+            (label :class "percent" :text "vs code${numcode > 0 ? ' ('+numcode+')' : ''}")
           )
         )
       )
       (label :class "percent" :text {wtitle})
       (box
         :halign "end"
-        :class "right-side"
         :space-evenly false
         (revealer
           :reveal {wifireveal}
@@ -367,6 +367,12 @@
           :class "percent right"
           :text {formattime(EWW_TIME, "%l:%M %p")}
         )
+        (hoverbtn
+          :name "dnd"
+          :class "wifibtn bell"
+          :onclick "makoctl mode -t dnd && eww update dnd=${!dnd}"
+          (icon :name "bell${dnd ? "_off" : ""}.png" :scale 19)
+        )
       )
     )
   )
@@ -386,7 +392,7 @@
   (box
     :width 845
     :height 310
-    :visible {statsvisible}
+    :style "background-color: ${statsvisible ? "rgba(35, 38, 46, 0.932)" : "transparent"};"
     :class "statwindow"
     :space-evenly false
     (box

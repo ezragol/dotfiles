@@ -3,3 +3,6 @@ width=350
 border-radius=3
 anchor=bottom-right
 outer-margin=0,2,15
+
+[mode=dnd]
+invisible=1

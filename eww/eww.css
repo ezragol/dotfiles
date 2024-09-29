@@ -132,15 +132,15 @@ progressbar > trough > progress {
 }
 
 .dock {
-    border-radius: 5px;
-    background-color: rgba(241, 241, 241, 0.38);
+    border-radius: 4px;
+    background-color: rgba(218, 218, 218, 0.365);
     color: #2e2d2d;
     font-family: 'Red Hat Display', sans-serif;
     font-weight: 800;
 }
 
 .pbutton {
-    padding: 1px 8px 0 10px;
+    padding: 1px 8px 0 11px;
 }
 
 .percent {
@@ -181,7 +181,7 @@ scale > contents > trough > highlight  {
 
 .hovered {
     transition: background-color, 0.15s;
-    background-color: rgba(115, 115, 115, 0.388);
+    background-color: rgba(115, 115, 115, 0.257);
 }
 
 .pwrbutton {
@@ -200,19 +200,15 @@ scale > contents > trough > highlight  {
     margin: 0 -3px 0 8px;
 }
 
-.right-side {
-    padding-right: 3px;
-}
-
 .right {
     padding: 0 8px 0 2px;
 }
 
 .statwindow {
     padding-right: 13px;
-    background-color: rgba(35, 38, 46, 0.932);
+    /* transition: background-color 0.3s; */
     font-family: 'Red Hat Display';
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 .statwindow .bigtime {
@@ -345,4 +341,9 @@ calendar {
 
 .disks {
     margin-top: 20px;
+}
+
+.bell {
+    padding-right: 10px;
+    padding-top: 1px;
 }
