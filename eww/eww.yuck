@@ -145,6 +145,10 @@
   )
 )
 
+(defwidget papicon [name ?class ?scale]
+  (icon :name "../../../../../usr/share/icons/${name}" :class {class} :scale {scale})
+)
+
 (defwidget volumeicon [scale]
   (icon :name "volume_${muted == "yes" ? "off" : volume < 100 ? volume == 0 ? "mute" : "low" : "high"}.png" :scale {scale})
 )
@@ -319,6 +323,54 @@
         :halign "end"
         :space-evenly false
         (revealer
+          :reveal {musicreveal && artist != ""}
+          :transition "slideright"
+          :duration "250ms"
+          (box
+            :space-evenly false
+            (label :class "song" :text {title} :wrap true :limit-width 20)
+            (hoverbtn
+              :name "audioback"
+              :class ""
+              :onclick "playerctl back"
+              (icon :name "audio_back.png" :scale 23)
+            )
+            (hoverbtn
+              :name "audioplay"
+              :class ""
+              :onclick "playerctl play-pause"
+              (icon :name "audio_${playing == "Paused" ? "play" : "pause"}.png" :scale 20)
+            )
+            (hoverbtn
+              :name "audionext"
+              :class "song"
+              :onclick "playerctl next"
+              (icon :name "audio_next.png" :scale 23)
+            )
+            "("
+              (label :text {(round(pos / 60, 0) < (pos / 60) ? round(pos / 60, 0) : (round(pos / 60, 0) - 1))})
+              ":"
+              (zerobasednum
+                :num {(round(pos % 60, 0) < (pos % 60) ? round(pos % 60, 0) : (round(pos % 60, 0) - 1))}
+                :class ""
+              )
+              "/"
+              (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
+              ":"
+              (zerobasednum
+                :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
+                :class ""
+              )
+              (label :class "song" :text ")")
+          )
+        )
+        (hoverbtn
+          :name "music"
+          :onclick "eww update musicreveal=${!musicreveal}"
+          :class "launchbtn"
+          (icon :name "music.png")
+        )
+        (revealer
           :reveal {wifireveal}
           :transition "slideright"
           :duration "250ms"
@@ -378,217 +430,213 @@
   )
 )
 
+(defwidget stat [?width]
+  (box
+    :class "stat"
+    :style "background-color: ${statsvisible ? "rgba(38, 38, 38, 0.9)" : "transparent"};"
+    (children)
+  )
+)
+
 (defwindow stats
   :monitor 0
   :geometry (geometry
     :x 0
     :y 0
-    :width 845
+    :width "100%"
+    :height "96.5%"
     :anchor "center"
   )
   :stacking "fg"
   :exclusive false
   :focusable false
   (box
-    :width 845
-    :height 310
-    :style "background-color: ${statsvisible ? "rgba(35, 38, 46, 0.932)" : "transparent"};"
-    :class "statwindow"
+    :class "statcontainer"
+    :orientation "v"
+    :halign "center"
     :space-evenly false
     (box
-      :orientation "v"
       :space-evenly false
-      :valign "start"
-      (box
-        :halign "fill"
-        :width 470
-        :class "statshead"
-        (label :text {statslide ? "notifications" : "spotify"} :class "header" :halign "start")
-      )
-      (box
-        :visible {statslide}
-        :class "calendar"
-        :space-evenly false
-        :halign "fill"
+      (stat
         (box
-          :class "cal"
-          :width 445
-          (notifcenter)
-        )
-      )
-      (box
-        :orientation "v"
-        :space-evenly false
-        :valign "start"
-        :visible {!statslide && artist != ""}
-        :width 450
-        :class "leftside"
-        (box
+          :width 410
+          :orientation "v"
           :halign "center"
-          :valign "start"
-          :class "leftstat spot"
-          :space-evenly false
+          :valign "center"
           (box
-            :orientation "v"
+            :class "progress"
             :valign "center"
-            :halign "end"
-            :class "leftstat"
-            (box
-              :orientation "v"
-              :space-evenly false
-              :class "song-info"
-              (label :text {title} :class "title" :wrap true :limit-width 20)
-              (label :text {artist} :class "artist" :wrap true :limit-width 40)
-              (label :text {album} :class "album" :limit-width 40)
-            )
-            (centerbox
-              :class "actions"
-              :width 275
-              (button
-                :onclick "playerctl previous"
-                (icon :name "audio_back_white.png" :scale 33)
-              )
-              (button
-                :onclick "playerctl play-pause"
-                (icon :name "audio_${playing == "Playing" ? "pause" : "play"}_white.png" :scale 33)
-              )
-              (button
-                :onclick "playerctl next"
-                (icon :name "audio_next_white.png" :scale 33)
-              )
-            )
-          )
-          (box
-            :class "cover"
-            (image
-              :path {cover}
-              :image-height 140
-              :image-width 140
-            )
-          )
-        )
-        (progress
-          :value {position}
-          :class "songprog"
-        )
-        (box
-          :class "songprog num"
-          (box
+            :halign "center"
             :space-evenly false
-            :halign "start"
-            (label :text {(round(pos / 60, 0) < (pos / 60) ? round(pos / 60, 0) : (round(pos / 60, 0) - 1))})
-            ":"
-            (zerobasednum
-              :num {(round(pos % 60, 0) < (pos % 60) ? round(pos % 60, 0) : (round(pos % 60, 0) - 1))}
-              :class ""
+            (progress
+              :value {EWW_CPU.avg}
+              :class "bar firstbar"
             )
+            (icon :name "cpu.png" :scale 43)
           )
           (box
+            :class "progress"
+            :halign "center"
+            :valign "center"
             :space-evenly false
-            :halign "end"
-            (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
-            ":"
-            (zerobasednum
-              :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
-              :class ""
+            (progress
+              :value {EWW_RAM.used_mem_perc}
+              :class "bar"
             )
+            (icon :name "memory.png" :scale 45)
           )
-        )
-      )
-      (box
-        :class "no-notif"
-        :halign "center"
-        :valign "center"
-        :visible {!statslide && artist == ""}
-        :width 475
-        :height 300
-        (label :xalign 0.5 :yalign 0.57 :text "no music playing")
-      )
-    )
-    (box
-      :orientation "v"
-      :halign "end"
-      :valign "start"
-      :class "disks"
-      :space-evenly false
-      (box
-        :halign "center"
-        :space-evenly false
-        :class "toggle"
-        (button
-          :onclick "eww update statslide=${!statslide}"
           (box
-            (icon :name "arrow_left.png" :scale 22)
-            (icon :name "arrow_right.png" :scale 22)
+            :class "progress"
+            :halign "center"
+            :valign "center"
+            :space-evenly false
+            (progress
+              :value {EWW_TEMPS["CORETEMP_CORE_0"]}
+              :class "bar"
+            )
+            (icon :name "temp.png" :scale 46)
+          )
+          (box
+            :class "progress"
+            :halign "center"
+            :valign "center"
+            :space-evenly false
+            (progress
+              :value {EWW_DISK["/"].used_perc}
+              :class "bar"
+            )
+            (icon :name "disk.png" :scale 45)
+          )
+          (box
+            :class "progress"
+            :halign "center"
+            :valign "center"
+            :space-evenly false
+            (progress
+              :value {brightness / 960}
+              :class "bar"
+            )
+            (icon :name "brightness_${brightness / 960 < 25 ? "low" : brightness / 960 < 50 ? "down" : brightness / 960 < 75 ? "mid" : "high"}.png" :scale 45)
           )
         )
       )
       (box
-        :class "disk"
-        :width 65
-        :height 65
-        (percent
-          :value {EWW_TEMPS["CORETEMP_CORE_0"]}
-          :style "color: ${EWW_TEMPS["CORETEMP_CORE_0"] > 40 ? EWW_TEMPS["CORETEMP_CORE_0"] > 50 ? "red" : "orange" : "white"}"
-          :label "${EWW_TEMPS["CORETEMP_CORE_0"]}°C"
-          :clockwise true
-        )
+        :width 875
+        :height 469
+        :class "stat"
+        :style "border: 2px solid #222222;"
       )
-      (label :class "statlab" :text "cpu temp")
-      (box
-        :class "disk"
-        :width 65
-        :height 65
-        (percent
-          :value {EWW_DISK["/"].used_perc}
-          :style "color: ${EWW_DISK["/"].used_perc > 75 ? EWW_DISK["/"].used_perc > 90 ? "red" : "orange" : "white"}"
-          :label "${round(EWW_DISK["/"].used / 1000000000, 0)}Gb"
-        )
-      )
-      (label :class "statlab" :text "disk usage")
-    )
-    (box
-      :class "clock"
-      :valign "start"
-      :halign "end"
-      :orientation "v"
-      :space-evenly false
-      (clock :align "end")
       (box
         :orientation "v"
-        :valign "start"
-        :class "leftstat"
-        (box
-          :class "progress"
-          :valign "center"
-          :space-evenly false
-          (progress
-            :value {EWW_CPU.avg}
-            :class "bar firstbar"
+        :space-evenly false
+        (stat
+          (box
+            :width 335
+            :height 202
+            :space-evenly false
+            :yalign "start"
+            :orientation "v"
+            (label
+              :class "statbigtime"
+              :xalign 0.0
+              :text {formattime(EWW_TIME, "%l:%M")}
+            )
+            (label
+              :class "statdate"
+              :xalign 0.0
+              :text {formattime(EWW_TIME, "%A, %B %d")}
+            )
           )
-          (icon :name "cpu.png" :scale 25)
         )
-        (box
-          :class "progress"
-          :valign "center"
-          :space-evenly false
-          (progress
-            :value {EWW_RAM.used_mem_perc}
-            :class "bar"
+        (stat
+          (box
+            :height 100
+            (hoverbtn
+              :name "bigshutdown"
+              :class "big"
+              :onclick "shutdown now"
+              (papicon :name "Papirus/64x64/apps/gnome-shutdown.svg" :scale 80)
+            )
+            (hoverbtn
+              :name "bigreboot"
+              :class "big"
+              :onclick "reboot"
+              (papicon :name "Papirus/64x64/apps/system-reboot.svg" :scale 80)
+            )
+            (hoverbtn
+              :name "bigsuspend"
+              :class "big"
+              :onclick ""
+              (papicon :name "Papirus/64x64/apps/system-suspend.svg" :scale 80)
+            )
           )
-          (icon :name "memory.png" :scale 27)
         )
-        (box
-          :class "progress"
-          :valign "center"
-          :space-evenly false
-          (progress
-            :value {brightness / 960}
-            :class "bar"
-          )
-          (icon :name "brightness_${brightness / 960 < 25 ? "low" : brightness / 960 < 50 ? "down" : brightness / 960 < 75 ? "mid" : "high"}.png" :scale 26)
-        )
+      )
+    )
+    (box
+      (box
+        :width 800
+      )
+      (box
+        :width 800
+        :height 590
+        :class "stat"
+        :style "border: 2px solid #222222;"
       )
     )
   )
 )
+
+; (defwindow stats
+  ;   :monitor 0
+  ;   :geometry (geometry
+    ;     :x 0
+    ;     :y 0
+    ;     :width "100%"
+    ;     :height "96.5%"
+    ;     :anchor "center"
+  ;   )
+  ;   :stacking "fg"
+  ;   :exclusive false
+  ;   :focusable false
+  ;   (box
+    ;     :class "statcontainer"
+    ;     (centerbox
+      ;       :style "background-color: ${statsvisible ? "rgba(35, 38, 46, 0.932)" : "transparent"};"
+      ;       :class "statwindow"
+      ;
+      ;       (box
+        ;         :orientation "v"
+        ;         :halign "end"
+        ;         :valign "start"
+        ;         :class "disks"
+        ;         :space-evenly false
+        ;
+        ;         (box
+          ;           :class "disk"
+          ;           :width 65
+          ;           :height 65
+          ;           (percent
+            ;             :value {EWW_TEMPS["CORETEMP_CORE_0"]}
+            ;             :style "color: ${EWW_TEMPS["CORETEMP_CORE_0"] > 40 ? EWW_TEMPS["CORETEMP_CORE_0"] > 50 ? "red" : "orange" : "white"}"
+            ;             :label "${EWW_TEMPS["CORETEMP_CORE_0"]}°C"
+            ;             :clockwise true
+          ;           )
+        ;         )
+        ;         (label :class "statlab" :text "cpu temp")
+        ;         (box
+          ;           :class "disk"
+          ;           :width 65
+          ;           :height 65
+          ;           (percent
+            ;             :value {EWW_DISK["/"].used_perc}
+            ;             :style "color: ${EWW_DISK["/"].used_perc > 75 ? EWW_DISK["/"].used_perc > 90 ? "red" : "orange" : "white"}"
+            ;             :label "${round(EWW_DISK["/"].used / 1000000000, 0)}Gb"
+          ;           )
+        ;         )
+        ;         (label :class "statlab" :text "disk usage")
+      ;       )
+      ;
+    ;     )
+  ;   )
+; )

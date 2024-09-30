@@ -193,7 +193,7 @@ scale > contents > trough > highlight  {
 }
 
 .launchbtn {
-    padding: 0 10px;
+    padding: 0 9px;
 }
 
 .battperc {
@@ -204,9 +204,14 @@ scale > contents > trough > highlight  {
     padding: 0 8px 0 2px;
 }
 
+.statcontainer {
+    padding: 50px 70px;
+    color: #efefef;
+}
+
 .statwindow {
     padding-right: 13px;
-    /* transition: background-color 0.3s; */
+    transition: background-color 0.3s;
     font-family: 'Red Hat Display';
     border-radius: 4px;
 }
@@ -226,24 +231,29 @@ scale > contents > trough > highlight  {
 }
 
 .progress {
-    margin: 25px -25px -10px 25px;
+    margin: 8px -10px 8px 0;
 }
 
 .bar {
     padding-bottom: 13px;
-    margin-right: 17px;
+    margin-right: 27px;
 }
 
 .leftstat {
     margin: 5px 20px 0 0;
 }
 
+progressbar > trough {
+    min-width: 270px;
+    min-height: 11px;
+}
+
 progressbar > trough > progress {
-    min-height: 7px;
+    min-height: 17px;
 }
 
 .firstbar {
-    margin-right: 18px;
+    margin-right: 29px;
 }
 
 .spot {
@@ -251,7 +261,7 @@ progressbar > trough > progress {
 }
 
 .leftside {
-    margin-right: 20px;
+    margin-top: 100px;
 }
 
 .songprog {
@@ -346,4 +356,29 @@ calendar {
 .bell {
     padding-right: 10px;
     padding-top: 1px;
+}
+
+.stat {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 6px;
+    border: 2px solid rgba(44, 44, 44, 0.841);
+}
+
+.statbigtime {
+    font-size: 75px;
+    font-family: 'Vast Shadow';
+    margin-top: 35px;
+    margin-left: 30px;
+}
+
+.statdate {
+    font-weight: 800;
+    font-size: 22px;
+    margin-left: 33px;
+    font-family: 'Red Hat Display';
+}
+
+.big {
+    border-radius: 6px;
 }
