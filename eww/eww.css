@@ -5,71 +5,6 @@
 
 button {
     all: unset;
-}
-
-.time {
-    font-size: 90px;
-    font-family: 'Red Hat Display';
-    color: white;
-    font-weight: 800;
-    background-color: transparent;
-    border: none;
-}
-
-.date {
-    font-size: 18px;
-    padding: 0 3px;
-}
-
-.sidebar {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-    margin: 6px 7px 6px 2px;
-}
-
-.container {
-    background-color: rgba(19, 22, 29, 0.621);
-    border-radius: 5px;
-    box-shadow: 0 0 3px -1px black;
-}
-
-.side {
-    padding: 60px 40px;
-}
-
-.info {
-    margin: 50px -150px 0 0;
-    font-family: 'Inconsolata';
-    font-size: 18px;
-    font-weight: 800;
-}
-
-.gauge-label {
-    color: white;
-}
-
-.battery label, .ram label, .disk label {
-    color: white;
-    font-size: 14px;
-    font-weight: 800;
-}
-
-.labels {
-    color: rgb(255, 255, 255);
-    font-family: 'Red Hat Display';
-    font-weight: 800;
-    margin: 0 -200px 90px -50px;
-    font-size: 16px;
-}
-
-.launcher button {
-    background-color: rgba(45, 46, 50, 0.196);
-    border-radius: 5px;
-    margin: 5px 6px;
-}
-
-button {
     padding: 5px;
     border: none;
     background-color: transparent;
@@ -77,38 +12,6 @@ button {
 
 button image {
     background-color: transparent;
-}
-
-.launcher {
-    margin-bottom: 130px;
-}
-
-.cover {
-    margin-top: -10px;
-    padding: 0;
-    background-size: contain;
-}
-
-.title, .album, .artist {
-    font-family: 'Red Hat Display';
-    margin-left: 35px;
-}
-
-.title {
-    font-weight: 800;
-    font-size: 19px;
-}
-
-.toggle {
-    margin-bottom: 27px;
-}
-
-.artist, .album {
-    font-size: 18px;
-}
-
-.song-info {
-    margin-top: 20px;
 }
 
 progressbar > trough {
@@ -126,42 +29,16 @@ progressbar > trough > progress {
     margin: 0;
 }
 
-.actions {
-    margin: -20px 0 0 35px;
-    color: white;
-}
-
 .dock {
-    border-radius: 4px;
     background-color: rgba(218, 218, 218, 0.365);
     color: #2e2d2d;
     font-family: 'Red Hat Display', sans-serif;
     font-weight: 800;
 }
 
-.pbutton {
-    padding: 1px 8px 0 11px;
-}
-
-.percent {
-    margin-top: 3px;
-}
-
-.vol {
-    margin-left: -7px;
-}
-
-.volbtn {
-    padding: 1px 6px 0 6px;
-}
-
-.wifibtn {
-    padding: 0 7px;
-}
-
 scale > contents > trough {
     border: none;
-    background-color: rgba(74, 82, 96, 0.396);
+    background-color: rgba(255, 255, 255, 0.396);
     border-radius: 7px;
 }
 
@@ -170,12 +47,12 @@ scale > contents > trough > slider {
     padding: 6px;
     border-radius: 50%;
     border: none;
-    background-color: #2e2d2d;
+    background-color: #ffffff;
 }
 
 scale > contents > trough > highlight  {
     margin: 3px 0;
-    background-color: #2e2d2d;
+    background-color: #ffffff;
     border: none;
 }
 
@@ -185,7 +62,7 @@ scale > contents > trough > highlight  {
 }
 
 .pwrbutton {
-    padding: 3px 12px 0 12px;
+    padding: 0 12px;
 }
 
 .song {
@@ -353,11 +230,6 @@ calendar {
     margin-top: 20px;
 }
 
-.bell {
-    padding-right: 10px;
-    padding-top: 1px;
-}
-
 .stat {
     margin: 20px;
     padding: 20px;
@@ -381,4 +253,114 @@ calendar {
 
 .big {
     border-radius: 6px;
+}
+
+.dockbutton.wifi {
+    background-color: #90A9B6;
+}
+
+.dockbutton.bell {
+    background-color: #E89BA0;
+    padding: 9px;
+}
+
+.dockbutton.bell.hovered {
+    background-color: #E17A81;
+}
+
+.dockbutton.wifi .ssid {
+    color: white;
+    padding: 0 10px;
+    background-color: #516C7B;
+}
+
+.dockbutton .icon {
+    padding: 0 9px;
+}
+
+.dockbutton {
+    margin: 7px 4px;
+    color: white;
+}
+
+.dockbutton.docktime {
+    background-color: #EECC95;
+    margin-right: 7px;
+}
+
+.dockbutton.docktime .whattime {
+    background-color: #DE992B;
+    padding: 1px 9px 0 9px;
+}
+
+.dockbutton.battery {
+    background-color: #ACD8AA;
+}
+
+.dockbutton.battery .batteryperc {
+    padding: 2px 9px 0 9px;
+    background-color: #3E7A5C;
+}
+
+.dockbutton.volume {
+    background-color: #BF9BB5;
+}
+
+.dockbutton.volume .slider {
+    padding-left: 4px;
+    background-color: #A06A8F;
+}
+
+.dockbutton.music {
+    background-color: #B1A9B1;
+}
+
+.dockbutton.music .musicleft {
+    background-color: #766B76;
+}
+
+.dockbutton.music .musicleft .action {
+    background-color: #B1A9B1;
+    border-right: 2px solid #2e2d2d;
+}
+
+.dockbutton.music .musicleft .action.last {
+    border-right: none;
+}
+
+.dockbutton.music .musicleft .action.hovered {
+    background-color: #a29ca2;
+}
+
+.dockbutton.launchbtn {
+    background-color: #90A9B6;
+    padding-right: 0;
+}
+
+.dockbutton.launchbtn.hovered {
+    background-color: #84959e;
+}
+
+.dockbutton.launchbtn .lbtnright {
+    padding: 0 8px;
+    background-color: #516C7B;
+}
+
+.pbut {
+    padding: 0 10px;
+    background-color: #8D91B9;
+}
+
+.pbut.hovered {
+    background-color: #797da7;
+}
+
+.dockbutton.pbutton {
+    margin-left: 7px;
+    padding: 0;
+    background-color: #555A8B;
+}
+
+.dockbutton.pbutton.hovered {
+    background-color: #808196;
 }

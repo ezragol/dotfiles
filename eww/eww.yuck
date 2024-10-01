@@ -2,7 +2,6 @@
 (defvar volumereveal false)
 (defvar musicreveal false)
 (defvar wifireveal false)
-(defvar wifi "")
 (defvar dnd false)
 
 (deflisten volume
@@ -51,14 +50,14 @@
 (defpoll pos
   :interval "1s"
   :initial "0"
-  :run-while {artist != "" && statsvisible}
-  "playerctl position"
+  :run-while {artist != ""}
+  "/home/ezra/.config/hypr/time.sh"
 )
 
 (defpoll position
   :initial 0
   :interval "1s"
-  :run-while {artist != "" && statsvisible}
+  :run-while {artist != ""}
   "/home/ezra/.config/hypr/position.sh"
 )
 
@@ -100,6 +99,11 @@
   :run-while {statsvisible}
 "makoctl history")
 
+(defpoll wifi
+  :interval "30s"
+  :initial ""
+"iwgetid -r")
+
 (defvar statslide true)
 
 (defwidget clock [align]
@@ -120,9 +124,10 @@
   )
 )
 
-(defwidget hoverbtn [name class onclick]
+(defwidget hoverbtn [name class onclick ?pointer]
   (eventbox
     :onhover "eww update currenthover=${name} && eww update losthover=\"\""
+    :cursor {pointer ? "pointer" : ""}
     :onhoverlost "eww update losthover=${name}"
     (button
       :class {currenthover == name && losthover != name ? "hovered " + class : class}
@@ -247,8 +252,8 @@
   :monitor 0
   :geometry (geometry
     :x 0
-    :y 5
-    :width 1910
+    :y 0
+    :width "100%"
     :anchor "top center"
   )
   :stacking "fg"
@@ -260,170 +265,193 @@
       (box
         :halign "start"
         :space-evenly false
-        (hoverbtn
-          :name "powermenu"
-          :class "pbutton"
-          :onclick "eww update powerreveal=${!powerreveal}"
-          (icon :name "arch.svg")
-        )
-        (revealer
-          :reveal {powerreveal}
-          :transition "slideright"
-          :duration "250ms"
-          (box
-            :halign "center"
-            :space-evenly false
-            (hoverbtn
-              :name "poweroff"
-              :class "pwrbutton"
-              :onclick "shutdown now"
-              "power off"
+        (box
+          :space-evenly false
+          :class "dockbutton pbutton"
+          (hoverbtn
+            :name "powermenu"
+            :class "pbut"
+            :onclick "eww update powerreveal=${!powerreveal}"
+            (icon :name "arch.svg")
+          )
+          (revealer
+            :reveal {powerreveal}
+            :transition "slideright"
+            :duration "250ms"
+            (box
+              :halign "center"
+              :space-evenly false
+              (hoverbtn
+                :name "poweroff"
+                :class "pwrbutton"
+                :onclick "shutdown now"
+                "power off"
+              )
+              (hoverbtn
+                :name "reboot"
+                :class "pwrbutton"
+                :onclick "reboot"
+                "reboot"
+              )
             )
-            (hoverbtn
-              :name "reboot"
-              :class "pwrbutton"
-              :onclick "reboot"
-              "reboot"
+          )
+        )
+        (box
+          :class "dockbutton volume"
+          :space-evenly false
+          (hoverbtn
+            :name "volumemenu"
+            :class "icon"
+            :onclick "eww update volumereveal=${!volumereveal}"
+            (volumeicon :scale 20)
+          )
+          (revealer
+            :reveal {volumereveal}
+            :transition "slideright"
+            :duration "250ms"
+            (box
+              :space-evenly false
+              :class "slider"
+              (scale
+                :max 101
+                :width 100
+                :height 3
+                :value {volume / 2}
+                :onchange "/home/ezra/.config/hypr/setvol.sh {}"
+              )
             )
           )
         )
         (hoverbtn
           :name "chrome"
           :onclick "/home/ezra/.config/eww/select.sh google-chrome google-chrome-stable flags --ozone-platform-hint=auto --ozone-platform=wayland &"
-          :class "launchbtn"
+          :class "dockbutton launchbtn"
+          :pointer true
           (box
             :space-evenly false
             (icon :name "chrome.png" :class "song" :scale 20)
-            (label :class "percent" :text "chrome${numchrome > 0 ? ' ('+numchrome+')' : ''}")
+            (label :class "lbtnright" :text "chrome${numchrome > 0 ? ' ('+numchrome+')' : ''}")
           )
         )
         (hoverbtn
           :name "spotify"
           :onclick "/home/ezra/.config/eww/select.sh Spotify spotify &"
-          :class "launchbtn"
+          :class "dockbutton launchbtn"
+          :pointer true
           (box
             :space-evenly false
             (icon :name "spotify.svg" :class "song")
-            (label :class "percent" :text "spotify${numspotify > 0 ? ' ('+numspotify+')' : ''}")
+            (label :class "lbtnright" :text "spotify${numspotify > 0 ? ' ('+numspotify+')' : ''}")
           )
         )
         (hoverbtn
           :name "code"
           :onclick "/home/ezra/.config/eww/select.sh Code code"
-          :class "launchbtn"
+          :class "dockbutton launchbtn"
+          :pointer true
           (box
             :space-evenly false
             (icon :name "code.svg" :class "song")
-            (label :class "percent" :text "vs code${numcode > 0 ? ' ('+numcode+')' : ''}")
+            (label :class "lbtnright" :text "vs code${numcode > 0 ? ' ('+numcode+')' : ''}")
           )
         )
       )
-      (label :class "percent" :text {wtitle})
+      (label :class "percent" :text "")
       (box
         :halign "end"
         :space-evenly false
-        (revealer
-          :reveal {musicreveal && artist != ""}
-          :transition "slideright"
-          :duration "250ms"
+        (box
+          :class "dockbutton music"
+          :space-evenly false
           (box
             :space-evenly false
-            (label :class "song" :text {title} :wrap true :limit-width 20)
-            (hoverbtn
-              :name "audioback"
-              :class ""
-              :onclick "playerctl back"
-              (icon :name "audio_back.png" :scale 23)
-            )
-            (hoverbtn
-              :name "audioplay"
-              :class ""
-              :onclick "playerctl play-pause"
-              (icon :name "audio_${playing == "Paused" ? "play" : "pause"}.png" :scale 20)
-            )
-            (hoverbtn
-              :name "audionext"
-              :class "song"
-              :onclick "playerctl next"
-              (icon :name "audio_next.png" :scale 23)
-            )
-            "("
-              (label :text {(round(pos / 60, 0) < (pos / 60) ? round(pos / 60, 0) : (round(pos / 60, 0) - 1))})
-              ":"
-              (zerobasednum
-                :num {(round(pos % 60, 0) < (pos % 60) ? round(pos % 60, 0) : (round(pos % 60, 0) - 1))}
-                :class ""
+            :class "musicleft"
+            (revealer
+              :reveal {musicreveal && artist != ""}
+              :transition "slideright"
+              :duration "250ms"
+              (box
+                :space-evenly false
+                (hoverbtn
+                  :name "audioback"
+                  :class "action icon"
+                  :onclick "playerctl back"
+                  (icon :name "audio_back.png" :scale 23)
+                )
+                (hoverbtn
+                  :name "audioplay"
+                  :class "action icon"
+                  :onclick "playerctl play-pause"
+                  (icon :name "audio_${playing == "Paused" ? "play" : "pause"}.png" :scale 20)
+                )
+                (hoverbtn
+                  :name "audionext"
+                  :class "action icon last"
+                  :onclick "playerctl next"
+                  (icon :name "audio_next.png" :scale 23)
+                )
               )
-              "/"
-              (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
-              ":"
-              (zerobasednum
-                :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
-                :class ""
+            )
+            (button
+              :onclick "/home/ezra/.config/eww/select.sh Spotify spotify &"
+              (box
+                :space-evenly false
+                (label :class "icon" :text {title} :wrap true :limit-width 20)
+                "("
+                  {pos}
+                  "/"
+                  (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
+                  ":"
+                  (zerobasednum
+                    :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
+                    :class ""
+                  )
+                  (label :class "song" :text ")")
               )
-              (label :class "song" :text ")")
-          )
-        )
-        (hoverbtn
-          :name "music"
-          :onclick "eww update musicreveal=${!musicreveal}"
-          :class "launchbtn"
-          (icon :name "music.png")
-        )
-        (revealer
-          :reveal {wifireveal}
-          :transition "slideright"
-          :duration "250ms"
-          (box
-            :space-evenly false
-            :class "volbtn"
-            {wifi}
-          )
-        )
-        (hoverbtn
-          :name "wifi"
-          :class "wifibtn"
-          :onclick "eww update wifireveal=${!wifireveal} && /home/ezra/.config/hypr/getwifi.sh"
-          (icon :name "wifi.png" :scale 20)
-        )
-        (revealer
-          :reveal {volumereveal}
-          :transition "slideleft"
-          :duration "250ms"
-          (box
-            :space-evenly false
-            (scale
-              :max 101
-              :width 100
-              :height 3
-              :value {volume / 2}
-              :onchange "/home/ezra/.config/hypr/setvol.sh {}"
             )
           )
-        )
-        (hoverbtn
-          :name "volumemenu"
-          :class "volbtn"
-          :onclick "eww update volumereveal=${!volumereveal}"
-          (volumeicon :scale 21)
+          (hoverbtn
+            :name "music"
+            :onclick "eww update musicreveal=${!musicreveal}"
+            :class "launchbtn"
+            (icon :name "music.png")
+          )
         )
         (box
-          :class "battperc vol song"
+          :class "dockbutton wifi"
+          :space-evenly false
           (box
-            :class "percent"
+            :class "ssid"
+            {wifi}
+          )
+          (box
+            :class "icon"
+            (icon :name "wifi.png" :scale 20)
+          )
+        )
+        (box
+          :class "dockbutton battery"
+          :space-evenly false
+          (box
+            :class "batteryperc"
             {EWW_BATTERY.BAT0.capacity + "%"}
           )
-          (icon :name "battery_${EWW_BATTERY.BAT0.status == "Charging" ? "charging" : EWW_BATTERY.BAT0.capacity < 10 ? "critical" : EWW_BATTERY.BAT0.capacity < 25 ? "low" : EWW_BATTERY.BAT0.capacity < 40 ? "down" : EWW_BATTERY.BAT0.capacity < 55 ? "mid" : EWW_BATTERY.BAT0.capacity < 70 ? "up" : EWW_BATTERY.BAT0.capacity < 85 ? "high" : "full"}.png" :class "song")
+          (box
+            :class "icon"
+            (icon :name "battery_${EWW_BATTERY.BAT0.status == "Charging" ? "charging" : EWW_BATTERY.BAT0.capacity < 10 ? "critical" : EWW_BATTERY.BAT0.capacity < 25 ? "low" : EWW_BATTERY.BAT0.capacity < 40 ? "down" : EWW_BATTERY.BAT0.capacity < 55 ? "mid" : EWW_BATTERY.BAT0.capacity < 70 ? "up" : EWW_BATTERY.BAT0.capacity < 85 ? "high" : "full"}.png")
+          )
         )
-        (label
-          :class "percent right"
-          :text {formattime(EWW_TIME, "%l:%M %p")}
-        )
-        (hoverbtn
-          :name "dnd"
-          :class "wifibtn bell"
-          :onclick "makoctl mode -t dnd && eww update dnd=${!dnd}"
-          (icon :name "bell${dnd ? "_off" : ""}.png" :scale 19)
+        (box
+          :class "dockbutton docktime"
+          :space-evenly false
+          (label
+            :class "whattime"
+            :text {formattime(EWW_TIME, "%l:%M %p")}
+          )
+          (box
+            :class "icon"
+            (icon :name "clock.png" :scale 19)
+          )
         )
       )
     )
