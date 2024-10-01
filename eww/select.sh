@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+/home/ezra/.config/hypr/statswitch.sh hide
+
 for CLASS in $(hyprctl clients | grep class | cut -d ':' -f2 | xargs);
 do
     if [ "$CLASS" = "$1" ]; then
@@ -9,5 +11,4 @@ do
     fi
 done
 
-/home/ezra/.config/hypr/statswitch.sh hide
 $2
