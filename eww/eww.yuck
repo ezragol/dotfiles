@@ -22,24 +22,9 @@
 
 (defvar statsvisible false)
 
-(deflisten cover
-  :initial ""
-  "/home/ezra/.config/eww/cover.sh"
-)
-
 (deflisten title
   :initial ""
   "playerctl --follow metadata --format {{title}}"
-)
-
-(deflisten artist
-  :initial ""
-  "playerctl --follow metadata --format {{artist}}"
-)
-
-(deflisten album
-  :initial ""
-  "playerctl --follow metadata --format {{album}}"
 )
 
 (deflisten length
@@ -50,14 +35,14 @@
 (defpoll pos
   :interval "1s"
   :initial "0"
-  :run-while {artist != ""}
+  :run-while {title != ""}
   "/home/ezra/.config/hypr/time.sh"
 )
 
 (defpoll position
   :initial 0
   :interval "1s"
-  :run-while {artist != ""}
+  :run-while {title != ""}
   "/home/ezra/.config/hypr/position.sh"
 )
 
@@ -87,42 +72,10 @@
   :initial 0
 "/home/ezra/.config/eww/num.sh Code")
 
-(defpoll notifications
-  :interval "1s"
-  :initial ""
-  :run-while {statsvisible}
-"makoctl list")
-
-(defpoll notifhistory
-  :interval "1s"
-  :initial ""
-  :run-while {statsvisible}
-"makoctl history")
-
 (defpoll wifi
   :interval "30s"
   :initial ""
 "iwgetid -r")
-
-(defvar statslide true)
-
-(defwidget clock [align]
-  (box
-    :space-evenly false
-    :halign {align}
-    :orientation "v"
-    (box
-      :class "bigtime"
-      :halign {align}
-      {formattime(EWW_TIME, "%l:%M")}
-    )
-    (box
-      :class "date"
-      :halign {align}
-      {formattime(EWW_TIME, "%A, %B %d")}
-    )
-  )
-)
 
 (defwidget hoverbtn [name class onclick ?pointer]
   (eventbox
@@ -156,94 +109,6 @@
 
 (defwidget volumeicon [scale]
   (icon :name "volume_${muted == "yes" ? "off" : volume < 100 ? volume == 0 ? "mute" : "low" : "high"}.png" :scale {scale})
-)
-
-(defwidget notiflist [list ?clickable]
-  (box
-    :orientation "v"
-    :space-evenly false
-    :valign "start"
-    :halign "start"
-    (for notif in {list}
-      (box
-        :class "notif"
-        (hoverbtn
-          :name "notif-${notif.id.data}"
-          :class {clickable == true ? "not" : "nohover"}
-          :onclick "makoctl dismiss -n ${notif.id.data}"
-          (box
-            :space-evenly false
-            :halign "start"
-            :class "notif-interior"
-            (box
-              :class "notif-icon"
-              (icon :name "${notif.app-name.data == "Spotify" ? "spotify_white.svg" : notif.app-name.data == "Google Chrome" ? "chrome_white.png" : ""}" :scale 40)
-            )
-            (box
-              :orientation "v"
-              :halign "start"
-              :valign "center"
-              :space-evenly false
-              (label :text {notif.summary.data} :class "notif-title" :xalign 0 :wrap true :width 200)
-              (label :text {notif.body.data} :class "notif-sub" :xalign 0 :wrap true :width 200)
-            )
-          )
-        )
-      )
-    )
-  )
-)
-
-(defwidget notifcenter []
-  (scroll
-    :vscroll true
-    :height 220
-    (box
-      :orientation "v"
-      :space-evenly false
-      (box
-        :orientation "v"
-        :space-evenly false
-        :halign "start"
-        :valign "start"
-        :visible {notifications.data[0][0] != "null"}
-        (label :xalign 0 :text "unread" :class "notifblock-label")
-        (notiflist :list {notifications.data[0]} :clickable true)
-      )
-      (box
-        :orientation "v"
-        :space-evenly false
-        :halign "start"
-        :valign "start"
-        :visible {notifhistory.data[0][0] != "null"}
-        (label :xalign 0 :text "older" :class "notifblock-label")
-        (notiflist :list {notifhistory.data[0]})
-      )
-      (box
-        :class "no-notif"
-        :halign "center"
-        :valign "center"
-        :visible {notifications.data[0][0] == "null" && notifhistory.data[0][0] == "null"}
-        :width 380
-        :height 200
-        (label :xalign 0.56 :yalign 0.59 :text "no new notifications")
-      )
-    )
-  )
-)
-
-(defwidget percent [value style label ?clockwise]
-  (circular-progress
-    :thickness 5
-    :clockwise {clockwise == true ? true : false}
-    :start-at 75
-    :value {value}
-    :style {style}
-    (label
-      :class "gauge-label"
-      :text {label}
-    )
-  )
 )
 
 ; ------------------------------ windows --------------------------------
@@ -366,9 +231,9 @@
           (box
             :space-evenly false
             :class "musicleft"
-            :visible {artist != ""}
+            :visible {title != ""}
             (revealer
-              :reveal {musicreveal && artist != ""}
+              :reveal {musicreveal && title != ""}
               :transition "slideright"
               :duration "250ms"
               (box
@@ -615,57 +480,3 @@
     )
   )
 )
-
-; (defwindow stats
-  ;   :monitor 0
-  ;   :geometry (geometry
-    ;     :x 0
-    ;     :y 0
-    ;     :width "100%"
-    ;     :height "96.5%"
-    ;     :anchor "center"
-  ;   )
-  ;   :stacking "fg"
-  ;   :exclusive false
-  ;   :focusable false
-  ;   (box
-    ;     :class "statcontainer"
-    ;     (centerbox
-      ;       :style "background-color: ${statsvisible ? "rgba(35, 38, 46, 0.932)" : "transparent"};"
-      ;       :class "statwindow"
-      ;
-      ;       (box
-        ;         :orientation "v"
-        ;         :halign "end"
-        ;         :valign "start"
-        ;         :class "disks"
-        ;         :space-evenly false
-        ;
-        ;         (box
-          ;           :class "disk"
-          ;           :width 65
-          ;           :height 65
-          ;           (percent
-            ;             :value {EWW_TEMPS["CORETEMP_CORE_0"]}
-            ;             :style "color: ${EWW_TEMPS["CORETEMP_CORE_0"] > 40 ? EWW_TEMPS["CORETEMP_CORE_0"] > 50 ? "red" : "orange" : "white"}"
-            ;             :label "${EWW_TEMPS["CORETEMP_CORE_0"]}°C"
-            ;             :clockwise true
-          ;           )
-        ;         )
-        ;         (label :class "statlab" :text "cpu temp")
-        ;         (box
-          ;           :class "disk"
-          ;           :width 65
-          ;           :height 65
-          ;           (percent
-            ;             :value {EWW_DISK["/"].used_perc}
-            ;             :style "color: ${EWW_DISK["/"].used_perc > 75 ? EWW_DISK["/"].used_perc > 90 ? "red" : "orange" : "white"}"
-            ;             :label "${round(EWW_DISK["/"].used / 1000000000, 0)}Gb"
-          ;           )
-        ;         )
-        ;         (label :class "statlab" :text "disk usage")
-      ;       )
-      ;
-    ;     )
-  ;   )
-; )

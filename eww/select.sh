@@ -9,4 +9,5 @@ do
     fi
 done
 
+/home/ezra/.config/hypr/statswitch.sh hide
 $2
