@@ -356,7 +356,7 @@
           )
         )
       )
-      (label :class "percent" :text "")
+      (label :class "percent" :text {wtitle})
       (box
         :halign "end"
         :space-evenly false
@@ -366,6 +366,7 @@
           (box
             :space-evenly false
             :class "musicleft"
+            :visible {artist != ""}
             (revealer
               :reveal {musicreveal && artist != ""}
               :transition "slideright"

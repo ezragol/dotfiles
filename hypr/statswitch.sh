@@ -14,6 +14,6 @@ else
     eww open stats
     exec /home/ezra/.config/hypr/windows.sh 0.0 &
     eww update statsvisible=true
-    alacritty --title "we are so back" --class top --hold -e top &
+    alacritty --title "can you meet me halfway" --class top --hold -e top &
     alacritty -o 'window.padding.y=47' -o 'window.padding.x=40' --class neo --hold -e neofetch &
 fi
