@@ -284,6 +284,15 @@
           )
         )
         (box
+          :class "dockbutton bell"
+          (hoverbtn
+            :name "dnd"
+            :class "launchbtn"
+            :onclick "makoctl mode -t dnd && eww update dnd=${!dnd}"
+            (icon :name "bell${dnd ? "_off" : ""}.png" :scale 19)
+          )
+        )
+        (box
           :class "dockbutton wifi"
           :space-evenly false
           (box
@@ -316,7 +325,10 @@
           )
           (box
             :class "icon"
-            (icon :name "clock.png" :scale 19)
+            (label
+              :class "timeofday"
+              :text {formattime(EWW_TIME, "%d")}
+            )
           )
         )
       )
@@ -445,22 +457,27 @@
         (stat
           (box
             :height 100
+            :halign "center"
+            :space-evenly false
             (hoverbtn
               :name "bigshutdown"
               :class "big"
               :onclick "shutdown now"
+              :pointer true
               (papicon :name "Papirus/64x64/apps/gnome-shutdown.svg" :scale 80)
             )
             (hoverbtn
               :name "bigreboot"
               :class "big"
               :onclick "reboot"
+              :pointer true
               (papicon :name "Papirus/64x64/apps/system-reboot.svg" :scale 80)
             )
             (hoverbtn
               :name "bigsuspend"
               :class "big"
               :onclick ""
+              :pointer true
               (papicon :name "Papirus/64x64/apps/system-suspend.svg" :scale 80)
             )
           )

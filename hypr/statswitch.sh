@@ -16,6 +16,6 @@ else
         exec /home/ezra/.config/hypr/windows.sh 0.0 &
         eww update statsvisible=true
         alacritty --title "can you meet me halfway" --class top --hold -e top &
-        alacritty -o 'window.padding.y=47' -o 'window.padding.x=40' --class neo --hold -e neofetch &
+        alacritty -o 'window.padding.y=46' -o 'window.padding.x=40' --class neo --hold -e neofetch &
     fi
 fi
