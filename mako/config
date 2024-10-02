@@ -1,8 +1,18 @@
 padding=8
 width=350
-border-radius=3
+border-radius=0
 anchor=bottom-right
-outer-margin=0,2,15
+outer-margin=0,10,20
+font=Red Hat Display,12
+layer=overlay
+background-color=#C3C4D5
+border-color=#efefef
+text-color=#000000
+group-by=app-name
+
+[app-name=volume]
+padding=5,10
+max-icon-size=25
 
 [mode=dnd]
 invisible=1

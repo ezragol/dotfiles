@@ -239,14 +239,16 @@ calendar {
 .statbigtime {
     font-size: 75px;
     font-family: 'Vast Shadow';
-    margin-top: 35px;
+    margin-top: 10px;
     margin-left: 30px;
+    margin-bottom: -20px;
 }
 
 .statdate {
     font-weight: 800;
     font-size: 22px;
     margin-left: 33px;
+    margin-top: 15px;
     font-family: 'Red Hat Display';
 }
 
@@ -267,7 +269,7 @@ calendar {
 }
 
 .dockbutton {
-    margin: 7px 4px;
+    margin: 5px 3px;
     color: white;
 }
 
@@ -281,12 +283,12 @@ calendar {
 }
 
 .dockbutton.battery {
-    background-color: rgb(128, 177, 146);
+    background-color: rgb(249, 224, 77);
 }
 
 .dockbutton.battery .batteryperc {
     padding: 2px 9px 0 9px;
-    background-color: rgb(70, 114, 86);
+    background-color: rgb(197, 168, 7);
 }
 
 .dockbutton.bell .launchbtn {
@@ -319,7 +321,7 @@ calendar {
 }
 
 .dockbutton.wifi .ssid, .dockbutton.launchbtn .lbtnright {
-    background-color: rgb(94, 125, 130);
+    background-color: rgb(77, 103, 106);
 
 }
 
@@ -363,7 +365,11 @@ calendar {
 .timeofday {
     color: #2e2d2d;
     font-family: monospace;
-    font-size: 20px;
-    padding: 0 1px 1px 0;
+    font-size: 19px;
+    padding: 0 1px 0 0;
     font-weight: 800;
+}
+
+.weather {
+    margin-left: 20px;
 }

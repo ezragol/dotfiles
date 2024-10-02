@@ -74,8 +74,14 @@
 
 (defpoll wifi
   :interval "30s"
-  :initial ""
+  :initial "no wifi"
 "iwgetid -r")
+
+(defpoll weather
+  :interval "60s"
+  :initial "weather loading..."
+  :run-while {statsvisible}
+"/home/ezra/.config/eww/weather.sh")
 
 (defwidget hoverbtn [name class onclick ?pointer]
   (eventbox
@@ -452,6 +458,12 @@
               :xalign 0.0
               :text {formattime(EWW_TIME, "%A, %B %d")}
             )
+            (box
+              :space-evenly false
+              :class "statdate"
+              (icon :name "partly_cloudy.png" :scale 38)
+              (label :class "weather" :text {weather})
+            )
           )
         )
         (stat
@@ -485,8 +497,7 @@
       )
     )
     (box
-      (box
-        :width 800
+      (stat
       )
       (box
         :width 800
