@@ -283,12 +283,12 @@ calendar {
 }
 
 .dockbutton.battery {
-    background-color: rgb(249, 224, 77);
+    background-color: rgb(199, 214, 133);
 }
 
 .dockbutton.battery .batteryperc {
     padding: 2px 9px 0 9px;
-    background-color: rgb(197, 168, 7);
+    background-color: rgb(134, 153, 51);
 }
 
 .dockbutton.bell .launchbtn {

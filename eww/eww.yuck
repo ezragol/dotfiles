@@ -289,15 +289,15 @@
             (icon :name "music.png")
           )
         )
-        (box
-          :class "dockbutton bell"
-          (hoverbtn
-            :name "dnd"
-            :class "launchbtn"
-            :onclick "makoctl mode -t dnd && eww update dnd=${!dnd}"
-            (icon :name "bell${dnd ? "_off" : ""}.png" :scale 19)
-          )
-        )
+        ; (box
+        ;   :class "dockbutton bell"
+        ;   (hoverbtn
+        ;     :name "dnd"
+        ;     :class "launchbtn"
+        ;     :onclick "makoctl mode -t dnd && eww update dnd=${!dnd}"
+        ;     (icon :name "bell${dnd ? "_off" : ""}.png" :scale 19)
+        ;   )
+        ; )
         (box
           :class "dockbutton wifi"
           :space-evenly false
@@ -345,7 +345,7 @@
 (defwidget stat [?width]
   (box
     :class "stat"
-    :style "background-color: ${statsvisible ? "rgba(38, 38, 38, 0.9)" : "transparent"};"
+    :style "background-color: ${statsvisible ? "rgba(46, 45, 45, 0.9)" : "transparent"};"
     (children)
   )
 )
