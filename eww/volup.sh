@@ -15,6 +15,6 @@ else
     pactl set-sink-volume $DEFAULT 200%
 fi
 
-/home/ezra/.config/hypr/volnotif.sh $CURRENT_VOL
+$HOME/.config/eww/volnotif.sh $CURRENT_VOL
 
-echo $CURRENT_VOL >> /home/ezra/.config/hypr/volume.txt
+echo $CURRENT_VOL >> $HOME/.config/eww/volume.txt

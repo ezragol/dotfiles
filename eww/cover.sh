@@ -2,7 +2,7 @@
 
 playerctl metadata --format "{{mpris:artUrl}}" --follow | while IFS= read -r line; do
 	if [[ $line == *"http"* ]]; then
-		CACHE_DIR="/home/ezra/.cache/album_art_cache"
+		CACHE_DIR="$HOME/.cache/album_art_cache"
 		mkdir -p "$CACHE_DIR"
 		FILE_NAME=$(basename "$line")
 		FILE_PATH="$CACHE_DIR/$FILE_NAME"

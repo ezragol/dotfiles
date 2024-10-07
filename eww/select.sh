@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-/home/ezra/.config/hypr/statswitch.sh hide
+$HOME/.config/eww/statswitch.sh hide
 
 for CLASS in $(hyprctl clients | grep class | cut -d ':' -f2 | xargs);
 do

@@ -8,14 +8,14 @@ if [[ "$STATUS" ]]; then
     kill $NEOWINDOW
     kill $TOPWINDOW
     eww update statsvisible=false
-    exec /home/ezra/.config/hypr/windows.sh 1.0 &
+    exec $HOME/.config/eww/windows.sh 1.0 &
     eww close stats
 else
     if [ "$1" != "hide" ]; then
         eww open stats
-        exec /home/ezra/.config/hypr/windows.sh 0.0 &
+        exec $HOME/.config/eww/windows.sh 0.0 &
         eww update statsvisible=true
         alacritty --title "can you meet me halfway" --class top --hold -e top &
-        alacritty -o 'window.padding.y=45' -o 'window.padding.x=40' --class neo --hold -e neofetch --gap 7 &
+        alacritty -o 'window.padding.y=45' -o 'window.padding.x=40' --class neo --hold -e fastfetch -c $HOME/.config/fastfetch &
     fi
 fi

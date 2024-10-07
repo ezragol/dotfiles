@@ -9,7 +9,7 @@
 !/dunst/dunstrc
 !README.md
 !.gitignore
-/hypr/calendar/update_calendar
-/hypr/mute.txt
-/hypr/volume.txt
-/hypr/volid.txt
+!/fastfetch
+/eww/mute.txt
+/eww/volume.txt
+/eww/volid.txt
