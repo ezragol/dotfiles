@@ -9,24 +9,16 @@
     "uptime",
     "packages",
     "shell",
-    "display",
     "de",
     "wm",
-    "wmtheme",
-    "theme",
+    "terminal",
     "cpu",
     "gpu",
     "memory",
+    "swap",
     "disk",
-    "localip",
     "battery",
     "break",
     "colors"
-  ],
-  "logo": {
-    "padding": {
-      "top": 1,
-      "left": 1
-    }
-  }
+  ]
 }

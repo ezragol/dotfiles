@@ -15,7 +15,7 @@ else
         eww open stats
         exec $HOME/.config/eww/windows.sh 0.0 &
         eww update statsvisible=true
-        alacritty --title "can you meet me halfway" --class top --hold -e top &
-        alacritty -o 'window.padding.y=45' -o 'window.padding.x=40' --class neo --hold -e fastfetch -c $HOME/.config/fastfetch &
+        alacritty --class top --hold -e top &
+        alacritty -o 'window.padding.y=35' -o 'window.padding.x=40' --class neo --hold -e fastfetch -c $HOME/.config/fastfetch &
     fi
 fi

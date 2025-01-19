@@ -15,6 +15,8 @@ else
     pactl set-sink-volume $DEFAULT 200%
 fi
 
-$HOME/.config/eww/volnotif.sh $CURRENT_VOL
+if [ $# -eq 0 ]; then
+    $HOME/.config/eww/volnotif.sh $CURRENT_VOL
+fi
 
 echo $CURRENT_VOL >> $HOME/.config/eww/volume.txt

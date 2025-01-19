@@ -14,31 +14,25 @@ button image {
     background-color: transparent;
 }
 
-progressbar > trough {
-    min-width: 200px;
-    min-height: 5px;
-    background-color: rgba(106, 106, 106, 0.196);
+tooltip {
     padding: 0;
-    border: none;
+    all: unset;
+    background-color: #2e2d2d;
 }
 
-progressbar > trough > progress {
-    background-color: white;
-    border: none;
-    min-height: 5px;
-    margin: 0;
+tooltip * {
+    margin: -5px -2px;
 }
 
 .dock {
-    background-color: rgba(218, 218, 218, 0.396);
-    color: #2e2d2d;
-    font-family: 'Red Hat Display', sans-serif;
-    font-weight: 800;
+    background-color: rgba(16, 16, 16, 0.523);
+    color: #efefef;
+    font-family: 'Red Hat Display ExtraBold', sans-serif;
+    font-size: 15px;
 }
 
 scale > contents > trough {
     border: none;
-    background-color: rgba(255, 255, 255, 0.396);
     border-radius: 7px;
 }
 
@@ -47,22 +41,22 @@ scale > contents > trough > slider {
     padding: 6px;
     border-radius: 50%;
     border: none;
-    background-color: #ffffff;
+    background-color: #2e2d2d;
 }
 
 scale > contents > trough > highlight  {
     margin: 3px 0;
-    background-color: #ffffff;
+    background-color: #2e2d2d;
     border: none;
 }
 
 .hovered {
     transition: background-color, 0.15s;
-    background-color: rgba(52, 52, 52, 0.257);
+    background-color: rgba(151, 151, 151, 0.257);
 }
 
 .pwrbutton {
-    padding: 0 12px;
+    padding: 0 11px;
 }
 
 .song {
@@ -73,53 +67,6 @@ scale > contents > trough > highlight  {
     padding: 0 9px;
 }
 
-.battperc {
-    margin: 0 -3px 0 8px;
-}
-
-.right {
-    padding: 0 8px 0 2px;
-}
-
-.statcontainer {
-    padding: 50px 70px;
-    color: #efefef;
-}
-
-.statwindow {
-    padding-right: 13px;
-    transition: background-color 0.3s;
-    font-family: 'Red Hat Display';
-    border-radius: 4px;
-}
-
-.statwindow .bigtime {
-    font-size: 54px;
-    margin-right: -8px;
-}
-
-.statwindow .date {
-    font-weight: 800;
-    margin-right: -10px;
-}
-
-.clock {
-    margin: 40px 25px 30px 0;
-}
-
-.progress {
-    margin: 8px -10px 8px 0;
-}
-
-.bar {
-    padding-bottom: 16px;
-    margin-right: 27px;
-}
-
-.leftstat {
-    margin: 5px 20px 0 0;
-}
-
 progressbar > trough {
     min-width: 270px;
     min-height: 11px;
@@ -127,87 +74,6 @@ progressbar > trough {
 
 progressbar > trough > progress {
     min-height: 15px;
-}
-
-.firstbar {
-    margin-right: 29px;
-}
-
-.spot {
-    margin: 53px 5px -10px 15px;
-}
-
-.leftside {
-    margin-top: 100px;
-}
-
-.songprog {
-    margin: -10px 5px 0 45px;
-}
-
-.num {
-    margin-top: 9px;
-    padding-right: 1px;
-}
-
-.statshead {
-    margin: 20px 6px -50px -100px;
-}
-
-.header {
-    font-family: 'Red Hat Display';
-    font-weight: 800;
-    text-decoration: underline;
-    margin-top: -3px;
-    margin-left: 130px;
-}
-
-.calendar {
-    margin: 60px 0 0 30px;
-}
-
-.cal {
-    margin-right: 35px;
-    margin-top: -7px;
-}
-
-calendar {
-    border: none;
-    font-weight: 800;
-}
-
-.statlab {
-    margin: 3px 0 16px 0;
-}
-
-.notif {
-    margin: 0 0 10px 0;
-    border: 1px solid white;
-}
-
-.notif-interior {
-    padding: 12px;
-}
-
-.notif-title {
-    font-family: monospace;
-    font-size: 16px;
-    font-size: 16px;
-    font-weight: 800;
-}
-
-.notif-sub {
-    font-family: monospace;
-}
-
-.notif-icon {
-    margin-right: 12px;
-}
-
-.no-notif {
-    font-family: monospace;
-    font-size: 18px;
-    font-weight: 800;
 }
 
 .not {
@@ -222,90 +88,50 @@ calendar {
     background-color: rgba(35, 38, 46, 0.932);
 }
 
-.notifblock-label {
-    margin: 0 0 5px 0;
+.dockbutton.wifi {
+    margin-right: 10px;
 }
 
-.disks {
-    margin-top: 20px;
-}
-
-.stat {
-    margin: 20px;
-    padding: 20px;
-    border: 2px solid rgba(44, 44, 44, 0.841);
-}
-
-.statbigtime {
-    font-size: 75px;
-    font-family: 'Vast Shadow';
-    margin-top: 10px;
-    margin-left: 30px;
-    margin-bottom: -20px;
-}
-
-.statdate {
-    font-weight: 800;
-    font-size: 22px;
-    margin-left: 33px;
-    margin-top: 15px;
-    font-family: 'Red Hat Display';
-}
-
-.big {
-    border-radius: 50%;
-    padding: 10px;
-    margin: 0 3px;
+.title {
+    margin-top: -1px;
 }
 
 .dockbutton.wifi .ssid {
-    color: white;
-    padding: 0 10px;
-    background-color: #516C7B;
+    padding: 5px 2px 6px 6px;
+}
+
+.dockbutton.wifi .icon {
+    padding: 0 6px 0 7px;
 }
 
 .dockbutton .icon {
-    padding: 0 9px;
-}
-
-.dockbutton {
-    margin: 5px 3px;
-    color: white;
+    padding: 3px 9px;
 }
 
 .dockbutton.docktime {
-    background-color: #EECC95;
-    margin-right: 7px;
+    margin-right: 5px;
 }
 
 .dockbutton.docktime .whattime {
-    padding: 2px 9px 0 9px;
-}
-
-.dockbutton.battery {
-    background-color: rgb(199, 214, 133);
+    padding: 2px 8px 0 3px;
 }
 
 .dockbutton.battery .batteryperc {
-    padding: 2px 9px 0 9px;
-    background-color: rgb(134, 153, 51);
+    padding: 2px 0 0 0;
+    margin-right: -6px;
+    margin-left: -2px;
+}
+
+.dockbutton.battery .icon {
+    margin-bottom: -1px;
 }
 
 .dockbutton.bell .launchbtn {
-    padding: 0 8px;
-}
-
-.dockbutton.volume, .dockbutton.bell, .dockbutton.music, .dockbutton.music .musicleft .action {
-    background-color: rgb(149, 152, 184);
+    padding: 2px 8px 0 8px;
 }
 
 .dockbutton.volume .slider {
     padding-left: 4px;
-    background-color: rgb(84, 87, 120);
-}
-
-.dockbutton.music .musicleft {
-    background-color: rgb(84, 87, 120);
 }
 
 .dockbutton.music .musicleft .action {
@@ -316,45 +142,20 @@ calendar {
     border-right: none;
 }
 
-.dockbutton.wifi, .dockbutton.launchbtn {
-    background-color: rgb(149, 174, 178);
-}
-
-.dockbutton.wifi .ssid, .dockbutton.launchbtn .lbtnright {
-    background-color: rgb(77, 103, 106);
-
-}
-
 .dockbutton.launchbtn {
-    padding-right: 0;
-}
-
-.dockbutton.launchbtn.hovered {
-    background-color: rgb(120, 147, 151);
+    padding: 0 8px 0 10px;
 }
 
 .dockbutton.launchbtn .lbtnright {
-    padding: 0 8px;
-}
-
-.pbut, .dockbutton.docktime {
-    background-color: rgb(208, 139, 143);
-}
-
-.dockbutton.pbutton, .dockbutton.docktime .whattime {
-    background-color: rgb(175, 82, 86);
+    padding: 0 2px;
 }
 
 .pbut {
     padding: 0 10px;
 }
 
-.pbut.hovered {
-    background-color: rgb(183, 107, 110);
-}
-
 .dockbutton.pbutton {
-    margin-left: 7px;
+    margin-left: 5px;
     padding: 0;
 }
 
@@ -362,14 +163,25 @@ calendar {
     background-color: #808196;
 }
 
-.timeofday {
-    color: #2e2d2d;
-    font-family: monospace;
-    font-size: 19px;
-    padding: 0 1px 0 0;
-    font-weight: 800;
+.percent, .workspace {
+    font-family: "Inconsolata", monospace;
+    font-weight: 700;
+    font-size: 16px;
 }
 
-.weather {
-    margin-left: 20px;
+.workspace {
+    font-size: 16px;
+    font-weight: 800;
+    padding: 0 8px;
+    color: black;
+}
+
+.workspace label {
+    margin: 12px 0;
+    padding: 0 3px;
+    background-color: #efefef;
+}
+
+.tty {
+    padding: 0 9px 0 8px;
 }
