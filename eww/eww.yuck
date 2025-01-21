@@ -10,15 +10,17 @@
   :initial "yes"
 "tail -f ~/.config/eww/mute.txt")
 
+(deflisten mic
+  :initial "yes"
+"tail -f ~/.config/eww/micmute.txt")
+
 (defpoll wtitle
   :interval "2s"
   :initial ""
-  "hyprctl activewindow -j | jq \".title\" -r | rev | cut -d '-' -f1 | rev")
+"hyprctl activewindow -j | jq \".title\" -r | rev | cut -d '-' -f1 | rev | xargs")
 
 (defvar currenthover "")
 (defvar losthover "")
-
-(defvar statsvisible false)
 
 (deflisten title
   :initial ""
@@ -202,7 +204,7 @@
           )
         )
       )
-      (label :class "percent" :text {formattime(EWW_TIME, "%A, %B %d") + (wtitle != "null" ? " #" + wtitle : "")})
+      (label :class "percent" :text {formattime(EWW_TIME, "%A, %B %d") + (wtitle != "null" ? " # " + wtitle : "")})
       (box
         :halign "end"
         :space-evenly false
@@ -257,7 +259,18 @@
             :name "volumemenu"
             :class "icon"
             :onclick "${EWW_CONFIG_DIR}/mute.sh"
-            (volumeicon :scale 18)
+            (volumeicon :scale 19)
+          )
+        )
+        (box
+          :class "dockbutton volume"
+          :space-evenly false
+          :tooltip "toggle mic"
+          (hoverbtn
+            :name "mic"
+            :class "icon"
+            :onclick "${EWW_CONFIG_DIR}/micmute.sh"
+            (icon :name "mic${mic == " yes" ? "off" : ""}.png" :scale 18)
           )
         )
         (box
@@ -273,7 +286,7 @@
         (hoverbtn
           :name "wifi"
           :class "dockbutton wifi"
-          :onclick "${EWW_CONFIG_DIR}/select.sh Alacritty alacritty --hold -e nmcli &"
+          :onclick "alacritty --hold -e nmcli &"
           (box
             :space-evenly false
             (box

@@ -2,7 +2,7 @@
 CURRENT_VOL=$1
 LAST=$(cat $HOME/.config/eww/volid.txt)
 VOLP=$((CURRENT_VOL / 2))
-MUTED=$(pactl get-sink-mute $(pactl get-default-sink) | cut -d ':' -f2)
+MUTED=$(pactl get-sink-mute @DEFAULT_SINK@ | cut -d ':' -f2)
 if [ "$MUTED" = " yes" ]; then 
     MUTE_T="(muted)"
 else

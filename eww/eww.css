@@ -185,3 +185,8 @@ progressbar > trough > progress {
 .tty {
     padding: 0 9px 0 8px;
 }
+
+.context {
+    background-color: black;
+    margin-bottom: 800px;
+}

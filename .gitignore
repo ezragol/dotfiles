@@ -5,11 +5,17 @@
 
 !/hypr
 !/hypr/*
+
 !/dunst
 !/dunst/dunstrc
+
+!/wofi
+
 !README.md
 !.gitignore
 !/fastfetch
 /eww/mute.txt
 /eww/volume.txt
 /eww/volid.txt
+/eww/micmute.txt
+/eww/micid.txt

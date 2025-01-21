@@ -1,0 +1,30 @@
+#img {
+    margin-right: 5px;
+}
+
+#input {
+    all: unset;
+    border: none;
+    background-color: transparent;
+    padding: 14px;
+}
+
+#window {
+    background-color: rgba(34, 34, 34, 0.95);
+    border-radius: 6px;
+}
+
+#entry {
+    padding: 12px;
+}
+#entry:selected {
+    border: none;
+    background-color: rgba(0, 54, 99, 0.95);
+}
+
+* {
+    font-family: 'Poppins SemiBold';
+    font-size: 15px;
+    color: #efefef;
+    border: none;
+}

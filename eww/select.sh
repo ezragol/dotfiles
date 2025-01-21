@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-$HOME/.config/eww/statswitch.sh hide
+$HOME/.config/eww/ctx.sh hide
 
 for CLASS in $(hyprctl clients | grep class | cut -d ':' -f2 | xargs);
 do
