@@ -9,6 +9,7 @@ very simple, but mostly functional and usable for everyday stuff. most topbar el
 - wifi info
 - working hyprlock config (not pictured)
 - mini sliding menus in topbar
+- integrated wofi using hyprland plugin
 <br /><br />
 
 I use this setup on arch for my school laptop and it works perfectly fine for most things. the audio setup is very questionable and the camera does not work. this project is shockingly time consuming and also slightly frustrating.
@@ -18,49 +19,43 @@ more stuff to come eventually. this project is a work in progress that I only to
 ![screenshot 1](https://i.imgur.com/rqpgpPG.png)
 ![screenshot 2](https://i.imgur.com/Qz217Vb.png)
 
-list of packages (install with yay)
+### things to do before it works
+1. build hyprland from source and install headers:
+    ```bash
+    cd /hyprland build directory/
+    make all && sudo make install && sudo make installheaders
+    ```
+1. build hyprland plugin:
+    - make sure pkg-config is installed since plugin makefile uses pkg-config to find hyprland headers
+    - build plugin
+        ```bash
+        cd hypr/plugin
+        make
+        ```
+
+### list of packages (install with yay)
+there may be missing hyprland deps, building hyprland will fail and tell you what to install. `yay -S /package/-git` should work for most (if not all) missing hyprland deps
 ```
 alacritty
-alsa-utils
-aquamarine-git-debug
-base
-base-devel
-bluez
-bluez-utils
-clang
-conky
-dhcp
-dunst
-efibootmgr
-epapirus-icon-theme-git
 eww-wayland-git
-eww-wayland-git-debug
 fastfetch
 feh
 fff
-gdb
-glfw
 google-chrome
 grub
 hostapd
 hsetroot
-hyprcursor-git-debug
 hyprland-git
-hyprland-git-debug
-hyprlang-git-debug
 hyprlock-git
-hyprlock-git-debug
-hyprpaper
-hyprshot
-hyprutils-git-debug
-hyprwayland-scanner-git-debug
+hyprpaper-git
+hyprshot-git
+hyprutils-git
+hyprwayland-scanner-git
 inkscape
 intel-ucode
 iw
 iwd
 laptop-mode-tools
-linux
-linux-firmware
 man-db
 man-pages
 nano
@@ -68,7 +63,6 @@ networkmanager
 ntp
 nwg-look
 openssh
-os-prober
 perl-anyevent-i3
 pipewire-alsa
 pipewire-pulse

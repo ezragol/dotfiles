@@ -1,14 +1,13 @@
 #!/bin/zsh
 
-$HOME/.config/eww/ctx.sh hide
+# $HOME/.config/eww/ctx.sh hide
+WORKSPACE=$(hyprctl clients -j | jq --arg CLASS "$1" -c '.[] | select(.class == $CLASS) | .workspace.id' -r)
 
-for CLASS in $(hyprctl clients | grep class | cut -d ':' -f2 | xargs);
-do
-    if [ "$CLASS" = "$1" ]; then
-        WORKSPACE=$(hyprctl clients | awk "/$CLASS/" RS= | grep workspace | cut -d ':' -f2 | awk '{print $1}')
-        hyprctl dispatch workspace $WORKSPACE
-        exit
-    fi
-done
+echo $WORKSPACE
+
+if [[ "$WORKSPACE" ]]; then
+    hyprctl dispatch workspace $WORKSPACE
+    exit
+fi
 
 ${@:2}

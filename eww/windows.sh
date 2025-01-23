@@ -1,7 +1,11 @@
 #!/bin/zsh
 
-for WINDOW in $(hyprctl clients| grep Window | awk '{print $2}');
+WORKSPACE=$(hyprctl activeworkspace -j | jq .id)
+
+for WINDOW in $(hyprctl clients -j | jq -c ".[] | select(.workspace.id == $WORKSPACE) | .address" -r);
 do
-    hyprctl setprop address:0x$WINDOW alpha $1
-    hyprctl setprop address:0x$WINDOW alphainactive $1
+    if [ "$WINDOW" != "$2" ]; then
+        hyprctl dispatch setprop address:$WINDOW alpha $1
+        hyprctl dispatch setprop address:$WINDOW alphainactive $1
+    fi
 done
