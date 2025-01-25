@@ -162,7 +162,7 @@
           (box
             :tooltip "active workspace"
             :class "workspace"
-            (label :text "w${workspace}")
+            (label :text {substring("IIIIIIIIII", 0, round(workspace,0))})
           )
         )
         (hoverbtn
@@ -202,7 +202,7 @@
       (box 
         :class "center workspace"
         :space-evenly false
-        (label :text {formattime(EWW_TIME, "%A, %B %d")})
+        (label :text {formattime(EWW_TIME, "%B %d")})
         (label :visible {wtitle != "null"} :text {wtitle != "null" ? wtitle : ""})
         (label :visible {caps} :text {caps ? "CAPS" : ""})
       )

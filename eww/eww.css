@@ -185,12 +185,16 @@ progressbar > trough > progress {
     margin: 11px 4px;
 }
 
+.center.workspace :first-child:not(:only-child) {
+    background-color: #d3ecb4;
+}
+
 .center.workspace :nth-child(2) {
-    background-color: #dd9475;
+    background-color: #dc9f85;
 }
 
 .center.workspace :nth-child(3) {
-    background-color: #75b2dd;
+    background-color: #90c0e1;
 }
 
 .workspace label {
