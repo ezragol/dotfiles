@@ -16,8 +16,7 @@ I use this setup on arch for my school laptop and it works perfectly fine for mo
 
 more stuff to come eventually. this project is a work in progress that I only touch when I am not busy with school/work (which is rarely)
 
-![screenshot 1](https://i.imgur.com/rqpgpPG.png)
-![screenshot 2](https://i.imgur.com/Qz217Vb.png)
+imgur: [https://imgur.com/a/vrQelbz](https://imgur.com/a/vrQelbz)
 
 ### things to do before it works
 1. build hyprland from source and install headers:
