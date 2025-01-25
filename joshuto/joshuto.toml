@@ -1,0 +1,5 @@
+[display]
+column_ratio = [2,3,5]
+
+[previww]
+xdg_thumb_size = "xxlarge"

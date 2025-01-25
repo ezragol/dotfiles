@@ -10,6 +10,10 @@
 !/dunst/dunstrc
 
 !/wofi
+!/wofi/*
+
+!/joshuto
+!/joshuto.*
 
 !README.md
 !.gitignore

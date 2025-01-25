@@ -28,22 +28,22 @@ int writeToFile(std::string path, std::string contents)
     return 0;
 }
 
-void exec(const char *command)
+void updateWtitle()
 {
-    pid_t pid;
-    int status = 0;
-    pid = fork();
-    if (pid == 0)
-    {
-        system(command);
-        exit(1);
-    }
-    wait(&status);
+    std::string cmd = "exec /home/ezra/.config/eww/wtitle.sh";
+    HyprlandAPI::invokeHyprctlCommand("dispatch", cmd, "");
 }
 
 void windowCloseOverride()
 {
     std::string cmd = "exec /home/ezra/.config/eww/wclose.sh";
+    HyprlandAPI::invokeHyprctlCommand("dispatch", cmd, "");
+}
+
+void workspaceChanged()
+{
+    windowCloseOverride();
+    std::string cmd = "exec /home/ezra/.config/eww/workspace.sh";
     HyprlandAPI::invokeHyprctlCommand("dispatch", cmd, "");
 }
 
@@ -88,7 +88,9 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle)
     static auto P1 = HyprlandAPI::registerCallbackDynamic(PHANDLE, "closeWindow", [&](void *self, SCallbackInfo &info, std::any data)
                                                           { windowClosed(std::any_cast<PHLWINDOW>(data)); });
     static auto P2 = HyprlandAPI::registerCallbackDynamic(PHANDLE, "workspace", [&](void *self, SCallbackInfo &info, std::any data)
-                                                          { windowCloseOverride(); });
+                                                          { workspaceChanged(); });
+    static auto P3 = HyprlandAPI::registerCallbackDynamic(PHANDLE, "activeWindow", [&](void *self, SCallbackInfo &info, std::any data)
+                                                          { updateWtitle(); });
 
     return {"Plugin", "", "", "0.1"};
 }

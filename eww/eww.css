@@ -63,6 +63,10 @@ scale > contents > trough > highlight  {
     margin-right: 10px;
 }
 
+.songtime {
+    margin-left: 10px;
+}
+
 .launchbtn {
     padding: 0 9px;
 }
@@ -163,7 +167,7 @@ progressbar > trough > progress {
     background-color: #808196;
 }
 
-.percent, .workspace {
+.workspace {
     font-family: "Inconsolata", monospace;
     font-weight: 700;
     font-size: 16px;
@@ -172,8 +176,13 @@ progressbar > trough > progress {
 .workspace {
     font-size: 16px;
     font-weight: 800;
-    padding: 0 8px;
+    padding: 0 10px;
     color: black;
+}
+
+.center.workspace label {
+    padding: 0 8px;
+    margin: 11px 4px;
 }
 
 .workspace label {
@@ -189,4 +198,8 @@ progressbar > trough > progress {
 .context {
     background-color: black;
     margin-bottom: 800px;
+}
+
+.vol {
+    margin-left: 4px;
 }

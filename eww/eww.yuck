@@ -1,6 +1,13 @@
 (defvar powerreveal false)
 (defvar musicreveal false)
 (defvar dnd false)
+(defvar caps false)
+
+(defvar wtitle "")
+(defvar workspace "")
+
+(defvar currenthover "")
+(defvar losthover "")
 
 (deflisten volume
   :initial 0
@@ -13,14 +20,6 @@
 (deflisten mic
   :initial "yes"
 "tail -f ~/.config/eww/micmute.txt")
-
-(defpoll wtitle
-  :interval "2s"
-  :initial ""
-"hyprctl activewindow -j | jq \".title\" -r | rev | cut -d '-' -f1 | rev | xargs")
-
-(defvar currenthover "")
-(defvar losthover "")
 
 (deflisten title
   :initial ""
@@ -62,10 +61,6 @@
 (defpoll uptime
   :interval "60s"
 "uptime -p")
-
-(defpoll workspace
-  :interval "2s"
-"hyprctl activeworkspace -j | jq \".id\" -r ")
 
 (defwidget hoverbtn [name class onclick ?pointer]
   (eventbox
@@ -172,7 +167,7 @@
         )
         (hoverbtn
           :name "chrome"
-          :onclick "${EWW_CONFIG_DIR}/select.sh google-chrome google-chrome-stable flags --ozone-platform-hint=auto --ozone-platform=wayland &"
+          :onclick "${EWW_CONFIG_DIR}/select.sh google-chrome google-chrome-stable --ozone-platform-hint=auto --ozone-platform=wayland &"
           :class "dockbutton launchbtn"
           :pointer true
           (box
@@ -204,7 +199,12 @@
           )
         )
       )
-      (label :class "percent" :text {formattime(EWW_TIME, "%A, %B %d") + (wtitle != "null" ? " # " + wtitle : "")})
+      (box :class "center workspace"
+        :space-evenly false
+        (label :text {formattime(EWW_TIME, "%A, %B %d")})
+        (label :visible {wtitle != "null"} :text {wtitle != "null" ? wtitle : ""})
+        (label :visible {caps} :text {caps ? "CAPS" : ""})
+      )
       (box
         :halign "end"
         :space-evenly false
@@ -224,18 +224,19 @@
                   :space-evenly false
                   (label :class "title" :text {title != "" ? title : "no music playing"} :wrap true :limit-width 20)
                   (box
-                    :visible {title != ""}
+                    ; :visible {title != ""}
                     :space-evenly false
+                    :class "songtime"
                     "("
-                    {pos}
-                    "/"
-                    (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
-                    ":"
-                    (zerobasednum
-                      :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
-                      :class ""
-                    )
-                    (label :text ")")
+                      {pos}
+                      "/"
+                      (label :text {round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1)})
+                      ":"
+                      (zerobasednum
+                        :num {round(((length / 60000000) - (round(length / 60000000, 0) < (length / 60000000) ? round(length / 60000000, 0) : (round(length / 60000000, 0) - 1))) * 60, 0)}
+                        :class ""
+                      )
+                      (label :text ")")
                   )
                 )
               )
@@ -252,6 +253,16 @@
           )
         )
         (box
+          :class "dockbutton bell title"
+          :tooltip "do not disturb"
+          (hoverbtn
+            :name "dnd"
+            :class "launchbtn"
+            :onclick "${EWW_CONFIG_DIR}/dndtoggle.sh && eww update dnd=${!dnd}"
+            (icon :name "bell${dnd ? "_off" : ""}.png" :scale 18)
+          )
+        )
+        (box
           :class "dockbutton volume"
           :space-evenly false
           :tooltip "toggle mute"
@@ -259,7 +270,10 @@
             :name "volumemenu"
             :class "icon"
             :onclick "${EWW_CONFIG_DIR}/mute.sh"
-            (volumeicon :scale 19)
+            (box
+              (volumeicon :scale 19)
+              (label :class "vol" :text {(volume /2) + "%"})
+            )
           )
         )
         (box
@@ -273,20 +287,10 @@
             (icon :name "mic${mic == " yes" ? "off" : ""}.png" :scale 18)
           )
         )
-        (box
-          :class "dockbutton bell title"
-          :tooltip "do not disturb"
-          (hoverbtn
-            :name "dnd"
-            :class "launchbtn"
-            :onclick "${EWW_CONFIG_DIR}/dndtoggle.sh && eww update dnd=${!dnd}"
-            (icon :name "bell${dnd ? "_off" : ""}.png" :scale 18)
-          )
-        )
         (hoverbtn
           :name "wifi"
           :class "dockbutton wifi"
-          :onclick "alacritty --hold -e nmcli &"
+          :onclick "alacritty --hold -e ${EWW_CONFIG_DIR}/wifi.sh &"
           (box
             :space-evenly false
             (box

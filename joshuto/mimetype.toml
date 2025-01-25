@@ -1,0 +1,15 @@
+[class]
+text_default = [
+	{ command = "nano" },
+	{ command = "code" }
+]
+image_default = [
+	{ command = "cvlc" },
+	{ command = "feh" }
+]
+
+[mimetype.text]
+inherit = "text_default"
+
+[mimetype.image]
+inherit = "image_default"
