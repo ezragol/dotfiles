@@ -100,6 +100,10 @@ progressbar > trough > progress {
     margin-top: -1px;
 }
 
+.dockbutton.volume.first .icon {
+    padding-left: 5px;
+}
+
 .dockbutton.wifi .ssid {
     padding: 5px 2px 5px 6px;
 }

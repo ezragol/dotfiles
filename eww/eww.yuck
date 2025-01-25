@@ -264,7 +264,7 @@
           )
         )
         (box
-          :class "dockbutton volume"
+          :class "dockbutton volume first"
           :space-evenly false
           :tooltip "toggle mute"
           (hoverbtn
