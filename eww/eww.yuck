@@ -156,7 +156,7 @@
             :onclick "hyprctl dispatch exit"
             (box
               :tooltip "exit to tty"
-              (icon :name "console.svg" :scale 20)
+              (icon :name "console.svg" :scale 21)
             )
           )
           (box
@@ -199,7 +199,8 @@
           )
         )
       )
-      (box :class "center workspace"
+      (box 
+        :class "center workspace"
         :space-evenly false
         (label :text {formattime(EWW_TIME, "%A, %B %d")})
         (label :visible {wtitle != "null"} :text {wtitle != "null" ? wtitle : ""})
