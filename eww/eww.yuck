@@ -153,7 +153,7 @@
               (hoverbtn
                 :name "suspend"
                 :class "pwrbutton"
-                :onclick "hyprlock &"
+                :onclick "systemctl suspend"
                 "suspend"
               )
             )
@@ -212,7 +212,7 @@
         :space-evenly false
         ; DO NOT REMOVE! loads EWW_TEMPS into `eww state` so temps poll can work...
         (label :visible false :text {EWW_TEMPS})
-        (label :text {replace(replace(jq(formattime(EWW_TIME, "\"%b %d\""), "ascii_downcase"), "\"", ""), " ", "_")})
+        (label :text {replace(jq(formattime(EWW_TIME, "\"%b %d\""), "ascii_downcase"), "\"", "")})
         (label :class "wtitle" :visible {wtitle != "null"} :text {wtitle != "null" ? wtitle : ""})
         (label :class "caps" :visible {caps} :text {caps ? "caps lock: on" : ""})
         (label :class "ram" :visible {showRam} :text "mem: ${round(EWW_RAM.used_mem / 1000000000, 2)}/${round(EWW_RAM.total_mem / 1000000000,0)}GB")

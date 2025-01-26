@@ -1,0 +1,51 @@
+# Main options
+title-text: ""
+desktop-image: "background.png"
+desktop-color: "#000000"
+terminal-font: "Cascadia Mono Regular 14"
+terminal-box: "terminal_box_*.png"
+terminal-left: "0"
+terminal-top: "0"
+terminal-width: "100%"
+terminal-height: "100%"
+terminal-border: "0"
+
+# Boot menu
++ boot_menu {
+  left = 15%
+  top = 40%
+  width = 55%
+  height = 65%
+  item_font = "Cascadia Mono Regular 18"
+  item_color = "#efefef"
+  selected_item_color = "#2d2d2d"
+  icon_width = 0
+  icon_height = 0
+  item_icon_space = 15
+  item_height = 40
+  item_padding = 2
+  item_spacing = 10
+  selected_item_pixmap_style = "slice_*.png"
+}
+
++ label {
+  left = 15%+20
+  top = 36%
+  align = "center"
+  text = "bootloader menu"
+  color = "#efefef"
+  font = "Cascadia Mono Regular 18"
+}
+
+
+# Countdown label
+# You can change the name of default starting OS here
++ label {
+  left = 15%+20
+  top = 38%
+  align = "center"
+  id = "__timeout__"
+  text = "Selected OS will start in %d seconds"
+  color = "#cccccc"
+  font = "Cascadia Mono Regular 14"
+}

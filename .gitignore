@@ -13,7 +13,10 @@
 !/wofi/*
 
 !/joshuto
-!/joshuto.*
+!/joshuto/*
+
+!/grub-theme
+!/grub-theme/*
 
 !README.md
 !.gitignore
