@@ -212,11 +212,11 @@
         :space-evenly false
         ; DO NOT REMOVE! loads EWW_TEMPS into `eww state` so temps poll can work...
         (label :visible false :text {EWW_TEMPS})
-        (label :text {formattime(EWW_TIME, "%B %d")})
+        (label :text {replace(replace(jq(formattime(EWW_TIME, "\"%b %d\""), "ascii_downcase"), "\"", ""), " ", "_")})
         (label :class "wtitle" :visible {wtitle != "null"} :text {wtitle != "null" ? wtitle : ""})
         (label :class "caps" :visible {caps} :text {caps ? "caps lock: on" : ""})
         (label :class "ram" :visible {showRam} :text "mem: ${round(EWW_RAM.used_mem / 1000000000, 2)}/${round(EWW_RAM.total_mem / 1000000000,0)}GB")
-        (label :class "temp" :visible {showTemp} :text "CPU temp: ${round(temps, 1)}°C")
+        (label :class "temp" :visible {showTemp} :text "cpu: ${round(temps, 1)}°C")
       )
       (box
         :halign "end"
@@ -319,7 +319,7 @@
         (box
           :class "dockbutton battery"
           :space-evenly false
-          :tooltip {replace(replace(replace(replace(EWW_BATTERY.BAT0.status, "D", "d"), "C", "c"), "N", "n"), "F", "f")}
+          :tooltip {replace(jq("\"" + EWW_BATTERY.BAT0.status + "\"", "ascii_downcase"), "\"", "")}
           (box
             :class "batteryperc"
             {EWW_BATTERY.BAT0.capacity + "%"}
