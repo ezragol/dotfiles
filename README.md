@@ -10,13 +10,15 @@ very simple, but mostly functional and usable for everyday stuff. most topbar el
 - working hyprlock config (not pictured)
 - mini sliding menus in topbar
 - integrated wofi using hyprland plugin
+- grub theme
+- wofi config
 <br /><br />
 
 I use this setup on arch for my school laptop and it works perfectly fine for most things. the audio setup is very questionable and the camera does not work. this project is shockingly time consuming and also slightly frustrating.
 
 more stuff to come eventually. this project is a work in progress that I only touch when I am not busy with school/work (which is rarely)
 
-imgur: [https://imgur.com/a/j7KE9j1](https://imgur.com/a/j7KE9j1)
+imgur: [https://imgur.com/a/ugR3Q71](https://imgur.com/a/ugR3Q71)
 
 ### things to do before it works
 1. build hyprland from source and install headers:
