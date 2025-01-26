@@ -9,6 +9,9 @@
 (defvar currenthover "")
 (defvar losthover "")
 
+(defvar showRam false)
+(defvar showTemp false)
+
 (deflisten volume
   :initial 0
 "tail -f ~/.config/eww/volume.txt")
@@ -61,6 +64,11 @@
 (defpoll uptime
   :interval "60s"
 "uptime -p")
+
+(defpoll temps
+  :interval "3s"
+  :run-while {showTemp}
+"eww state | grep EWW_TEMPS | awk '{print $2}' | jq 'to_entries' | jq -c '.[] | select(.key | startswith(\"CORETEMP\")) | .value' -r | jq -cs 'add/length'")
 
 (defwidget hoverbtn [name class onclick ?pointer]
   (eventbox
@@ -202,9 +210,13 @@
       (box 
         :class "center workspace"
         :space-evenly false
+        ; DO NOT REMOVE! loads EWW_TEMPS into `eww state` so temps poll can work...
+        (label :visible false :text {EWW_TEMPS})
         (label :text {formattime(EWW_TIME, "%B %d")})
-        (label :visible {wtitle != "null"} :text {wtitle != "null" ? wtitle : ""})
-        (label :visible {caps} :text {caps ? "CAPS" : ""})
+        (label :class "wtitle" :visible {wtitle != "null"} :text {wtitle != "null" ? wtitle : ""})
+        (label :class "caps" :visible {caps} :text {caps ? "caps lock: on" : ""})
+        (label :class "ram" :visible {showRam} :text "mem: ${round(EWW_RAM.used_mem / 1000000000, 2)}/${round(EWW_RAM.total_mem / 1000000000,0)}GB")
+        (label :class "temp" :visible {showTemp} :text "CPU temp: ${round(temps, 1)}°C")
       )
       (box
         :halign "end"
