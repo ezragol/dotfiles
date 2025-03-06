@@ -159,7 +159,6 @@ progressbar > trough > progress {
 }
 
 .dockbutton.pbutton {
-    margin-left: 5px;
     padding: 0;
 }
 
@@ -167,48 +166,61 @@ progressbar > trough > progress {
     background-color: #808196;
 }
 
-.workspace {
+.workspace, .date {
     font-family: "Inconsolata", monospace;
     font-weight: 700;
     font-size: 16px;
-}
-
-.workspace {
     font-size: 16px;
     font-weight: 800;
     padding: 0 10px;
+}
+
+.date {
     color: black;
 }
 
-.center.workspace label {
-    padding: 0 8px;
-    margin: 11px 4px;
-}
-
-.center.workspace .caps {
-    background-color: #a7e190;
-}
-
-.center.workspace .ram {
-    background-color: #90c0e1;
-}
-
-.center.workspace .temp {
-    background-color: #c290e1;
-}
-
-.center.workspace .wtitle {
-    background-color: #dc9f85;
+.workspace.left label:first-child {
+    margin-left: -3px;
 }
 
 .workspace label {
-    margin: 12px 0;
+    padding: 0 8px;
+    margin: 11px 4px;
+    background-color: #efefef;
+    color: black;
+}
+
+.workspace label.caps {
+    background-color: #a7e190;
+}
+
+.workspace label.ram {
+    background-color: #90c0e1;
+}
+
+.workspace label.temp {
+    background-color: #c290e1;
+}
+
+.workspace label.wtitle {
+    background-color: #dc9f85;
+}
+
+.workspace label.ws {
+    padding: 0 3px;
+}
+
+.date {
+    margin: 12px 0 11px 0;
     padding: 0 3px;
     background-color: #efefef;
 }
 
+.date {
+    margin: 11px 8px 10px 0;
+}
+
 .tty {
-    margin-top: 1px;
     padding: 0 9px 0 8px;
 }
 

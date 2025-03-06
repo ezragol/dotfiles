@@ -108,7 +108,7 @@
     :x 0
     :y 0
     :width "100%"
-    :anchor "top center"
+    :anchor "bottom center"
   )
   :stacking "fg"
   :exclusive true
@@ -163,57 +163,26 @@
             :class "tty"
             :onclick "hyprctl dispatch exit"
             (box
-              :tooltip "exit to tty"
+              :tooltip "exit"
               (icon :name "console.svg" :scale 21)
             )
           )
-          (box
-            :tooltip "active workspace"
-            :class "workspace"
-            (label :text {substring("IIIIIIIIII", 0, round(workspace,0))})
-          )
         )
-        (hoverbtn
-          :name "chrome"
-          :onclick "${EWW_CONFIG_DIR}/select.sh google-chrome google-chrome-stable --ozone-platform-hint=auto --ozone-platform=wayland &"
-          :class "dockbutton launchbtn"
-          :pointer true
-          (box
-            :space-evenly false
-            (icon :name "chrome.png" :class "song" :scale 20)
-            (label :class "lbtnright" :text "chrome${numchrome > 0 ? ' ('+numchrome+')' : ''}")
-          )
-        )
-        (hoverbtn
-          :name "spotify"
-          :onclick "${EWW_CONFIG_DIR}/select.sh Spotify spotify &"
-          :class "dockbutton launchbtn"
-          :pointer true
-          (box
-            :space-evenly false
-            (icon :name "spotify.svg" :class "song")
-            (label :class "lbtnright" :text "spotify${numspotify > 0 ? ' ('+numspotify+')' : ''}")
-          )
-        )
-        (hoverbtn
-          :name "code"
-          :onclick "${EWW_CONFIG_DIR}/select.sh Code code"
-          :class "dockbutton launchbtn"
-          :pointer true
-          (box
-            :space-evenly false
-            (icon :name "code.svg" :class "song")
-            (label :class "lbtnright" :text "vs code${numcode > 0 ? ' ('+numcode+')' : ''}")
+        (box 
+          :class "workspace left"
+          :space-evenly false
+          (label :class "date" :text {replace(jq(formattime(EWW_TIME, "\"%b %d\""), "ascii_downcase"), "\"", "")})
+          (label :tooltip "active workspace" :text {workspace % 5 == 0 ? (workspace == 10 ? "X" : "V") : (workspace % 5 == 4 ? (workspace == 9 ? "IX" : "IV") : (workspace > 5 ? "V" : "") + substring("III", 0, workspace % 5))})
+          (for title in {wtitle}
+            (label :class "wtitle" :text {replace(title, "wofi", "search")})
           )
         )
       )
       (box 
-        :class "center workspace"
+        :class "workspace"
         :space-evenly false
         ; DO NOT REMOVE! loads EWW_TEMPS into `eww state` so temps poll can work...
         (label :visible false :text {EWW_TEMPS})
-        (label :text {replace(jq(formattime(EWW_TIME, "\"%b %d\""), "ascii_downcase"), "\"", "")})
-        (label :class "wtitle" :visible {wtitle != "null"} :text {wtitle != "null" ? wtitle : ""})
         (label :class "caps" :visible {caps} :text {caps ? "caps lock: on" : ""})
         (label :class "ram" :visible {showRam} :text "mem: ${round(EWW_RAM.used_mem / 1000000000, 2)}/${round(EWW_RAM.total_mem / 1000000000,0)}GB")
         (label :class "temp" :visible {showTemp} :text "cpu: ${round(temps, 1)}°C")

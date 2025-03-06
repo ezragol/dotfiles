@@ -1,9 +1,9 @@
 #!/bin/zsh
 
-TITLE="$(hyprctl activewindow -j | jq ".class" -r)"
+sleep 0.1
 
-if [ "$TITLE" = "wofi" ]; then
-    TITLE="app_explorer"
-fi
+WORKSPACE=$(hyprctl activeworkspace -j | jq .id)
+
+TITLE=$(hyprctl clients -j | jq -c ".[] | select(.workspace.id == $WORKSPACE) | .class" | jq -cs)
 
 eww update wtitle="$(echo $TITLE | awk '{gsub(/\-/, "_"); print tolower($0)}')"
